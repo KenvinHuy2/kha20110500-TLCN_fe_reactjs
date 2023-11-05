@@ -2,6 +2,7 @@ import React, { lazy } from 'react';
 import { useRoutes } from 'react-router-dom';
 import { AdminLayout, BaseLayout } from './layouts';
 import Home from './pages/home/Home';
+import Drinks from './pages/drinks/Drinks';
 
 // General
 
@@ -27,6 +28,10 @@ const App = () => {
                 {
                     index: true,
                     element: <Home />,
+                },
+                {
+                    path: '/drinks',
+                    element: <Drinks />,
                 },
             ],
         },
