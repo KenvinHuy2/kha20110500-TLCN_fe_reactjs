@@ -3,6 +3,9 @@ import { useRoutes } from 'react-router-dom';
 import { AdminLayout, BaseLayout } from './layouts';
 import Home from './pages/home/Home';
 import Drinks from './pages/drinks/Drinks';
+import Login from './pages/login/Login';
+import AuthLayout from './layouts/auth-layout/AuthLayout';
+import Register from './pages/register/Register';
 
 // General
 
@@ -33,8 +36,24 @@ const App = () => {
                     path: '/drinks',
                     element: <Drinks />,
                 },
+
             ],
         },
+        {
+            path: '',
+            element: <AuthLayout />,
+            children: [
+                {
+                    path: '/login',
+                    element: <Login />,
+                },
+                {
+                    path: '/register',
+                    element: <Register />,
+                },
+            ],
+        },
+
     ]);
     return <>{routes}</>;
 };
