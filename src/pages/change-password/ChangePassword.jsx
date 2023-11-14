@@ -23,7 +23,7 @@ const ChangePassword = () => {
     return (
         <>
             {contextHolder}
-            <div className='form-title' style={{ cursor: 'pointer' }}><span style={{ color: 'gray', marginLeft: 10 }} onClick={()=>navigate('/information')}>Thông tin cá nhân </span> / Đổi mật khẩu</div>
+            <div className='form-title information' style={{ cursor: 'pointer' }}><span style={{ color: 'gray', marginLeft: 10 }} onClick={()=>navigate('/information')}>Thông tin cá nhân </span> / Đổi mật khẩu</div>
             <Form
                 name="basic"
                 initialValues={{
