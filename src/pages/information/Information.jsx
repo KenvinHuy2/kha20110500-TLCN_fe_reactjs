@@ -15,9 +15,9 @@ const Information = () => {
         });
     };
     return (
-        <>
+        <div className='information'>
             {contextHolder}
-            <div className='form-title information' style={{ cursor: 'pointer' }}>Thông tin cá nhân /<span style={{ color: 'gray', marginLeft: 10 }} onClick={()=>navigate('/change-password')}>Đổi mật khẩu</span> </div>
+            <div className='form-title' style={{ cursor: 'pointer' }}>Thông tin cá nhân /<span style={{ color: 'gray', marginLeft: 10 }} onClick={()=>navigate('/change-password')}>Đổi mật khẩu</span> </div>
             <Form
                 name="basic"
                 initialValues={{
@@ -45,7 +45,7 @@ const Information = () => {
                     </Button>
                 </Form.Item>
             </Form>
-        </>
+        </div>
 
     )
 }

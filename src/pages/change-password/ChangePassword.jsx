@@ -21,9 +21,9 @@ const ChangePassword = () => {
         }));
     };
     return (
-        <>
+        <div className='information'>
             {contextHolder}
-            <div className='form-title information' style={{ cursor: 'pointer' }}><span style={{ color: 'gray', marginLeft: 10 }} onClick={()=>navigate('/information')}>Thông tin cá nhân </span> / Đổi mật khẩu</div>
+            <div className='form-title' style={{ cursor: 'pointer' }}><span style={{ color: 'gray', marginLeft: 10 }} onClick={() => navigate('/information')}>Thông tin cá nhân </span> / Đổi mật khẩu</div>
             <Form
                 name="basic"
                 initialValues={{
@@ -35,9 +35,9 @@ const ChangePassword = () => {
                 <Form.Item
                     name="email"
                     initialValue={userInfo.email}
-                    
+
                 >
-                    <Input size='large' disabled/>
+                    <Input size='large' disabled />
                 </Form.Item>
 
                 <Form.Item
@@ -58,7 +58,7 @@ const ChangePassword = () => {
                     </Button>
                 </Form.Item>
             </Form>
-        </>
+        </div>
 
     )
 }
