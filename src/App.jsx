@@ -6,6 +6,9 @@ import Drinks from './pages/drinks/Drinks';
 import Login from './pages/login/Login';
 import AuthLayout from './layouts/auth-layout/AuthLayout';
 import Register from './pages/register/Register';
+import ForgotPassword from './pages/forgot-password/ForgotPassword';
+import Information from './pages/information/Information';
+import ChangePassword from './pages/change-password/ChangePassword';
 
 // General
 
@@ -50,6 +53,18 @@ const App = () => {
                 {
                     path: '/register',
                     element: <Register />,
+                },
+                {
+                    path: '/forgot-password',
+                    element: <ForgotPassword />,
+                },
+                {
+                    path: '/information',
+                    element: <Information />,
+                },
+                {
+                    path: '/change-password',
+                    element: <ChangePassword />,
                 },
             ],
         },

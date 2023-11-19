@@ -2,29 +2,28 @@ import React from 'react'
 import { Button, Form, Input, message } from 'antd';
 import { authService } from '../../services/auth-service';
 import { useNavigate } from 'react-router-dom';
+import './style.scss'
 
-const Login = () => {
+const ChangePassword = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const navigate = useNavigate();
+    const userInfo = JSON.parse(localStorage.getItem('user'));
     const onFinish = (values) => {
-        authService.signIn(values).then((data) => {
-            localStorage.setItem('user', JSON.stringify({ ...data, email: values.email }));
-            setTimeout(() => {
-                navigate('/')
-            }, 1000);
+        authService.changePass(values).then((data) => {
+            console.log(data)
             messageApi.open({
                 type: 'success',
-                content: 'Đăng nhập thành công',
+                content: 'Cập nhật thành công',
             });
         }).catch(err => messageApi.open({
             type: 'error',
-            content: err.response?.data.message,
+            content: err.response.data.message,
         }));
     };
     return (
-        <>
+        <div className='information'>
             {contextHolder}
-            <div className='form-title'>Đăng Nhập</div>
+            <div className='form-title' style={{ cursor: 'pointer' }}><span style={{ color: 'gray', marginLeft: 10 }} onClick={() => navigate('/information')}>Thông tin cá nhân </span> / Đổi mật khẩu</div>
             <Form
                 name="basic"
                 initialValues={{
@@ -35,27 +34,33 @@ const Login = () => {
             >
                 <Form.Item
                     name="email"
+                    initialValue={userInfo.email}
+
                 >
-                    <Input size='large' placeholder='Nhập email của bạn' />
+                    <Input size='large' disabled />
                 </Form.Item>
 
                 <Form.Item
-                    name="password"
+                    name="oldPassword"
                 >
-                    <Input.Password size='large' placeholder='Nhập mật khẩu của bạn' />
+                    <Input.Password size='large' placeholder='Nhập mật khẩu cũ của bạn' />
+                </Form.Item>
+
+                <Form.Item
+                    name="newPassword"
+                >
+                    <Input.Password size='large' placeholder='Nhập mật khẩu mới của bạn' />
                 </Form.Item>
 
                 <Form.Item>
-                    <div style={{ textAlign: 'right', fontWeight: 500, color: '#5800c3', cursor: 'pointer' }} onClick={() => navigate('/forgot-password')}>Quên mật khẩu?</div>
                     <Button type="primary" htmlType="submit" size='large' style={{ marginTop: '20px' }}>
-                        Đăng Nhập
+                        Cập Nhật
                     </Button>
-                    <div style={{ marginTop: 20 }}>Bạn chưa có tài khoản?<span style={{ fontWeight: 500, color: '#5800c3', marginLeft: 10, cursor: 'pointer' }} onClick={() => navigate('/register')}>Đăng ký</span> </div>
                 </Form.Item>
             </Form>
-        </>
+        </div>
 
     )
 }
 
-export default Login
+export default ChangePassword
