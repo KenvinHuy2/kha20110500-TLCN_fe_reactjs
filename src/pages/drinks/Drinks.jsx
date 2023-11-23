@@ -5,7 +5,7 @@ import CustomCard from '../../components/custom-card/CustomCard'
 function Drinks() {
   let item = [
     {
-      _id: "654f909cb06b852c90b1ccc3",
+      id: "654f909cb06b852c90b1ccc3",
       name: "Hồng Trà Caramel Dừa Đá Xa",
       image: [
           "https://phuclong.com.vn/uploads/dish/c4692e6548c0af-65000306hngtrcarameldaxay.png",

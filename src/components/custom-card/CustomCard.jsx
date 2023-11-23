@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, Card, Modal, Input } from 'antd';
 import './styles.scss'
 import { useDispatch } from 'react-redux';
+import { addProduct } from '../../slices/StoreSlices';
 
 const { Meta } = Card;
 const { TextArea } = Input;
@@ -79,8 +80,16 @@ export default function CustomCard({ item }) {
                             </div>
                         </div>
                         <div >
-                            <Button type='default' size='large' onClick={()=>{
-
+                            <Button type='default' size='large' onClick={() => {
+                                let newPrice = item.price
+                                if (size == "medium") {
+                                    newPrice = item.price + 5000
+                                } else if (size == "large") {
+                                    newPrice = item.price + 10000
+                                }
+                                dispatch(addProduct({ ...item, number: number, price: newPrice, idProduct: Math.random() }));
+                                setIsModalOpen(false);
+                                setNumber(1)
                             }}>Mua hàng</Button>
                         </div>
                     </div>
