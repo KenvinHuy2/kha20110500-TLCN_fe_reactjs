@@ -5,12 +5,13 @@ import StoreSlices from '../slices/StoreSlices';
 
 const persistConfig = {
   key: 'root',
-  storage,
-  store: StoreSlices
+  storage
 };
 
 const store = configureStore({
-  reducer: persistReducer(persistConfig, combineReducers({})),
+  reducer: persistReducer(persistConfig, combineReducers({
+    store: StoreSlices
+  })),
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
 const persistor = persistStore(store);

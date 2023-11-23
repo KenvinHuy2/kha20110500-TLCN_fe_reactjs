@@ -8,19 +8,16 @@ const storeSlices = createSlice({
     name: 'store',
     initialState,
     reducers: {
-        addProdcut: (state, action) => {
-            const index = state.listProductOrders?.findIndex(item => item.id === action.id)
-            if (index != -1) {
-                state.listProductOrders[index].number++
-                return { ...state };
-            } else {
-                state.listProductOrders.push(action)
-                return { ...state};
-            }
+        addProduct: (state, action) => {
+            state.listProduct.push(action.payload)
         },
+        deleteProduct: (state, action) => {
+            state.listProduct = state.listProduct.filter((item) => item.idProduct !== action.payload);
+            console.log(action.payload)
+        }
 
     },
 })
 
-export const { setAllUsers } = storeSlices.actions
+export const { addProduct, deleteProduct } = storeSlices.actions
 export default storeSlices.reducer
