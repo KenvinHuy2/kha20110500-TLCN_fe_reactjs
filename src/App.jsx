@@ -9,16 +9,26 @@ const Home = lazy(() => import('./pages/home'));
 // Admin pages
 const Dashboard = lazy(() => import('./pages/admin/dashboard'));
 
+// Store
 const Store = lazy(() => import('./pages/admin/store'));
 const Statistics = lazy(() => import('./pages/admin/store/statistics'));
 const BannerSettings = lazy(() => import('./pages/admin/store/banner-settings'));
 
+// Users
 const Users = lazy(() => import('./pages/admin/users'));
 const ListUsers = lazy(() => import('./pages/admin/users/list-users'));
 const CreateUser = lazy(() => import('./pages/admin/users/create-user'));
+const UserDetail = lazy(() => import('./pages/admin/users/user-detail'));
 
-const Orders = lazy(() => import('./pages/admin/orders'));
+// Products
 const Products = lazy(() => import('./pages/admin/products'));
+const ListProducts = lazy(() => import('./pages/admin/products/list-products'));
+const CreateProduct = lazy(() => import('./pages/admin/products/create-product'));
+const ProductTypes = lazy(() => import('./pages/admin/products/product-types'));
+const Markers = lazy(() => import('./pages/admin/products/markers'));
+
+// Orders
+const Orders = lazy(() => import('./pages/admin/orders'));
 
 const App = () => {
   const routes = useRoutes([
@@ -56,6 +66,10 @@ const App = () => {
               path: 'tao-tai-khoan',
               element: <LazyLoadComponent component={<CreateUser />} />,
             },
+            {
+              path: 'chi-tiet-nguoi-dung/:userId',
+              element: <LazyLoadComponent component={<UserDetail />} />,
+            },
           ],
         },
         {
@@ -65,6 +79,24 @@ const App = () => {
         {
           path: 'quan-ly-san-pham',
           element: <LazyLoadComponent component={<Products />} />,
+          children: [
+            {
+              path: 'danh-sach-san-pham',
+              element: <LazyLoadComponent component={<ListProducts />} />,
+            },
+            {
+              path: 'them-san-pham',
+              element: <LazyLoadComponent component={<CreateProduct />} />,
+            },
+            {
+              path: 'loai-san-pham',
+              element: <LazyLoadComponent component={<ProductTypes />} />,
+            },
+            {
+              path: 'markers',
+              element: <LazyLoadComponent component={<Markers />} />,
+            },
+          ],
         },
       ],
     },
