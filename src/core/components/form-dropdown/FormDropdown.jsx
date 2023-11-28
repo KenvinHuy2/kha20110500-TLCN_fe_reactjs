@@ -11,6 +11,7 @@ const FormDropdown = ({
   placeholder,
   dropdownOptions,
   hasSearch,
+  isDisabled,
 }) => {
   return (
     <>
@@ -26,6 +27,7 @@ const FormDropdown = ({
               options={dropdownOptions}
               showSearch={hasSearch}
               size='large'
+              disabled={isDisabled}
             />
           )}
         />

@@ -15,4 +15,11 @@ export const AlertService = {
       text: message,
     });
   },
+  confirm: (message) => {
+    return Swal.fire({
+      icon: 'question',
+      title: 'Xác nhận',
+      text: message,
+    });
+  },
 };

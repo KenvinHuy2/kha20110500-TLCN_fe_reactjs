@@ -52,20 +52,20 @@ const AdminLayout = () => {
         icon: <CoffeeOutlined />,
         children: [
           {
-            key: '/admin/san-pham/danh-sach',
-            label: <NavLink to='san-pham/danh-sach'>Danh sách sản phẩm</NavLink>,
+            key: '/admin/quan-ly-san-pham/danh-sach-san-pham',
+            label: <NavLink to='quan-ly-san-pham/danh-sach-san-pham'>Danh sách sản phẩm</NavLink>,
           },
           {
-            key: '/admin/san-pham/them-san-pham',
-            label: <NavLink to='san-pham/them-san-pham'>Thêm sản phẩm</NavLink>,
+            key: '/admin/quan-ly-san-pham/them-san-pham',
+            label: <NavLink to='quan-ly-san-pham/them-san-pham'>Thêm sản phẩm</NavLink>,
           },
           {
-            key: '/admin/san-pham/loai-san-pham',
-            label: <NavLink to='san-pham/loai-san-pham'>Loại sản phẩm</NavLink>,
+            key: '/admin/quan-ly-san-pham/loai-san-pham',
+            label: <NavLink to='quan-ly-san-pham/loai-san-pham'>Loại sản phẩm</NavLink>,
           },
           {
-            key: 'san-pham/markers',
-            label: <NavLink to='san-pham/markers'>Markers</NavLink>,
+            key: '/admin/quan-ly-san-pham/loai-san-pham/markers',
+            label: <NavLink to='quan-ly-san-pham/markers'>Markers</NavLink>,
           },
         ],
       },

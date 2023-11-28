@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { DynamicTable } from '../../../../core/components';
 import { AlertService, UsersService } from '../../../../core/services';
 import { storeActions } from '../../../../core/store';
+import { NavLink } from 'react-router-dom';
 
 const ListUsers = () => {
   const [users, setUsers] = useState([]);
@@ -67,9 +68,11 @@ const ListUsers = () => {
         key: 'actions',
         render: (_, user) => {
           return (
-            <Button type='primary' size='small'>
-              Chi tiết
-            </Button>
+            <NavLink to={`/admin/quan-ly-nguoi-dung/chi-tiet-nguoi-dung/${user._id}`}>
+              <Button type='primary' size='small'>
+                Chi tiết
+              </Button>
+            </NavLink>
           );
         },
         align: 'center',
