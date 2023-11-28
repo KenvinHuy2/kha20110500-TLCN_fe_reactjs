@@ -1,7 +1,7 @@
 import { Button, Form } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { FormDropdown, FormInput } from '../../../../../core/components';
+import { FormDropdown, FormInput, FormSwitch } from '../../../../../core/components';
 
 const roleOptions = [
   {
@@ -35,8 +35,26 @@ const UpdateUser = ({ user }) => {
     control,
     formState: { errors },
     watch,
+    reset,
   } = useForm({
     defaultValues: {
+      email: '',
+      password: '',
+      passwordConfirm: '',
+      fullName: '',
+      phone: '',
+      isAdmin: false,
+      isBlock: false,
+      gender: 'Nam',
+    },
+  });
+
+  const handleUpdateUser = (formData) => {
+    console.log(formData);
+  };
+
+  useEffect(() => {
+    reset({
       email: user ? user.email : '',
       password: '',
       passwordConfirm: '',
@@ -45,12 +63,8 @@ const UpdateUser = ({ user }) => {
       isAdmin: user ? user.isAdmin : false,
       isBlock: user ? user.isBlock : false,
       gender: user ? user.gender : 'Nam',
-    },
-  });
-
-  const handleUpdateUser = (formData) => {
-    console.log(formData);
-  };
+    });
+  }, [user]);
 
   return (
     <>
@@ -69,37 +83,6 @@ const UpdateUser = ({ user }) => {
             isDisabled={true}
           />
           <FormInput
-            isPassword
-            label='Mật khẩu'
-            name='password'
-            control={control}
-            error={errors.password}
-            placeholder='Nhập mật khẩu'
-            rules={{
-              required: 'Mật khẩu không được để trống',
-              minLength: {
-                value: 6,
-                message: 'Mật khẩu phải có ít nhất 6 ký tự',
-              },
-            }}
-          />
-          <FormInput
-            isPassword
-            label='Xác nhận mật khẩu'
-            name='passwordConfirm'
-            control={control}
-            error={errors.passwordConfirm}
-            placeholder='Nhập mật khẩu'
-            rules={{
-              validate: (value) => {
-                if (value !== watch('password')) {
-                  return 'Mật khẩu xác nhận không khớp';
-                }
-                return null;
-              },
-            }}
-          />
-          <FormInput
             label='Họ và tên'
             name='fullName'
             control={control}
@@ -115,31 +98,78 @@ const UpdateUser = ({ user }) => {
             placeholder='Nhập số điện thoại'
             isDisabled={true}
           />
+          <FormDropdown
+            label='Phái'
+            name='gender'
+            error={errors.gender}
+            control={control}
+            dropdownOptions={genderOptions}
+            isDisabled={true}
+          />
           <div className='row'>
             <div className='col-md-6 col-xs-12'>
-              <FormDropdown
-                label='Phái'
-                name='gender'
-                error={errors.gender}
+              <FormInput
+                isPassword
+                label='Mật khẩu'
+                name='password'
                 control={control}
-                dropdownOptions={genderOptions}
-                isDisabled={true}
+                error={errors.password}
+                placeholder='Nhập mật khẩu'
+                rules={{
+                  minLength: {
+                    value: 6,
+                    message: 'Mật khẩu phải có ít nhất 6 ký tự',
+                  },
+                }}
               />
             </div>
             <div className='col-md-6 col-xs-12'>
-              <FormDropdown
-                label='Vai trò'
-                name='isAdmin'
-                error={errors.isAdmin}
+              <FormInput
+                isPassword
+                label='Xác nhận mật khẩu'
+                name='passwordConfirm'
                 control={control}
-                dropdownOptions={roleOptions}
+                error={errors.passwordConfirm}
+                placeholder='Nhập mật khẩu'
+                rules={{
+                  validate: (value) => {
+                    if (value !== watch('password')) {
+                      return 'Mật khẩu xác nhận không khớp';
+                    }
+                    return null;
+                  },
+                }}
               />
             </div>
           </div>
+          <FormDropdown
+            label='Vai trò'
+            name='isAdmin'
+            error={errors.isAdmin}
+            control={control}
+            dropdownOptions={roleOptions}
+          />
+          <div className='d-flex'>
+            <FormSwitch label='Khoá tài khoản' name='isBlock' control={control} />
+            {watch('isBlock') ? (
+              <h6 className='text-danger m-0' style={{ alignSelf: 'center' }}>
+                Tài khoản đã bị khoá, người dùng này sẽ không thể đăng nhập
+              </h6>
+            ) : null}
+          </div>
           <div className='form-group'>
-            <Button htmlType='submit' type='primary' size='large' className='w-100'>
-              Lưu thay đổi
-            </Button>
+            <div className='row'>
+              <div className='col-md-6 col-xs-12'>
+                <Button htmlType='submit' type='primary' size='large' className='w-100'>
+                  Lưu thay đổi
+                </Button>
+              </div>
+              <div className='col-md-6 col-xs-12'>
+                <Button htmlType='button' type='primary' size='large' className='w-100' danger>
+                  Xoá người dùng
+                </Button>
+              </div>
+            </div>
           </div>
         </Form>
       </div>

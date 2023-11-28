@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UserOrders = () => {
+const UserOrders = ({ userId }) => {
   return <>UserOrders</>;
 };
 

@@ -64,7 +64,7 @@ const AdminLayout = () => {
             label: <NavLink to='quan-ly-san-pham/loai-san-pham'>Loại sản phẩm</NavLink>,
           },
           {
-            key: '/admin/quan-ly-san-pham/loai-san-pham/markers',
+            key: '/admin/quan-ly-san-pham/markers',
             label: <NavLink to='quan-ly-san-pham/markers'>Markers</NavLink>,
           },
         ],
