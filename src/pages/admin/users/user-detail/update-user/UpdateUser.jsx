@@ -1,7 +1,12 @@
-import { Button, Form } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { Avatar, Button, Form } from 'antd';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { FormDropdown, FormInput, FormSwitch } from '../../../../../core/components';
+import { AlertService, UsersService } from '../../../../../core/services';
+import { storeActions } from '../../../../../core/store';
 
 const roleOptions = [
   {
@@ -48,9 +53,46 @@ const UpdateUser = ({ user }) => {
       gender: 'Nam',
     },
   });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleUpdateUser = (formData) => {
-    console.log(formData);
+  const handleUpdateUser = async (formData) => {
+    try {
+      const payload = {
+        password: formData.password && formData.passwordConfirm ? formData.password : undefined,
+        isAdmin: formData.isAdmin,
+        isBlock: formData.isBlock,
+      };
+      dispatch(storeActions.showLoading());
+      await UsersService.updateUser(user._id, payload);
+      AlertService.success('Cập nhật thành công');
+      navigate('/admin/quan-ly-nguoi-dung/danh-sach-nguoi-dung');
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
+  };
+
+  const execDeleteUser = async () => {
+    try {
+      dispatch(storeActions.showLoading());
+      await UsersService.deleteUser(user._id);
+      AlertService.success('Xoá người dùng thành công');
+      navigate('/admin/quan-ly-nguoi-dung/danh-sach-nguoi-dung');
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
+  };
+
+  const handleDeleteUser = () => {
+    AlertService.confirm('Bạn có chắc là muốn xoá người dùng này?').then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        execDeleteUser();
+      }
+    });
   };
 
   useEffect(() => {
@@ -69,6 +111,9 @@ const UpdateUser = ({ user }) => {
   return (
     <>
       <div className='container'>
+        <div className='text-center py-2'>
+          <Avatar src={user?.avatar} size={120} icon={<UserOutlined />} />
+        </div>
         <Form
           name='create-user-form'
           layout='vertical'
@@ -106,42 +151,36 @@ const UpdateUser = ({ user }) => {
             dropdownOptions={genderOptions}
             isDisabled={true}
           />
-          <div className='row'>
-            <div className='col-md-6 col-xs-12'>
-              <FormInput
-                isPassword
-                label='Mật khẩu'
-                name='password'
-                control={control}
-                error={errors.password}
-                placeholder='Nhập mật khẩu'
-                rules={{
-                  minLength: {
-                    value: 6,
-                    message: 'Mật khẩu phải có ít nhất 6 ký tự',
-                  },
-                }}
-              />
-            </div>
-            <div className='col-md-6 col-xs-12'>
-              <FormInput
-                isPassword
-                label='Xác nhận mật khẩu'
-                name='passwordConfirm'
-                control={control}
-                error={errors.passwordConfirm}
-                placeholder='Nhập mật khẩu'
-                rules={{
-                  validate: (value) => {
-                    if (value !== watch('password')) {
-                      return 'Mật khẩu xác nhận không khớp';
-                    }
-                    return null;
-                  },
-                }}
-              />
-            </div>
-          </div>
+          <FormInput
+            isPassword
+            label='Mật khẩu'
+            name='password'
+            control={control}
+            error={errors.password}
+            placeholder='Nhập mật khẩu'
+            rules={{
+              minLength: {
+                value: 6,
+                message: 'Mật khẩu phải có ít nhất 6 ký tự',
+              },
+            }}
+          />
+          <FormInput
+            isPassword
+            label='Xác nhận mật khẩu'
+            name='passwordConfirm'
+            control={control}
+            error={errors.passwordConfirm}
+            placeholder='Nhập mật khẩu'
+            rules={{
+              validate: (value) => {
+                if (value !== watch('password')) {
+                  return 'Mật khẩu xác nhận không khớp';
+                }
+                return null;
+              },
+            }}
+          />
           <FormDropdown
             label='Vai trò'
             name='isAdmin'
@@ -165,7 +204,13 @@ const UpdateUser = ({ user }) => {
                 </Button>
               </div>
               <div className='col-md-6 col-xs-12'>
-                <Button htmlType='button' type='primary' size='large' className='w-100' danger>
+                <Button
+                  htmlType='button'
+                  type='primary'
+                  size='large'
+                  className='w-100'
+                  danger
+                  onClick={handleDeleteUser}>
                   Xoá người dùng
                 </Button>
               </div>

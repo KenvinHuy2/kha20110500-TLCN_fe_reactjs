@@ -20,6 +20,10 @@ export const AlertService = {
       icon: 'question',
       title: 'Xác nhận',
       text: message,
+      showCancelButton: true,
+      cancelButtonText: 'Huỷ',
+      confirmButtonColor: 'red',
+      confirmButtonText: 'Xoá',
     });
   },
 };

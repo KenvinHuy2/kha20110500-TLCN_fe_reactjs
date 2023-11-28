@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { Tabs } from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AlertService, UsersService } from '../../../../core/services';
+import { storeActions } from '../../../../core/store';
 import UpdateUser from './update-user/UpdateUser';
 import UserOrders from './user-orders/UserOrders';
-import { AlertService, UsersService } from '../../../../core/services';
-import { useDispatch } from 'react-redux';
-import { storeActions } from '../../../../core/store';
 
 const UserDetail = () => {
   const navigate = useNavigate();

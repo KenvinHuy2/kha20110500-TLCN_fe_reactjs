@@ -88,45 +88,38 @@ const CreateUser = () => {
               },
             }}
           />
-          <div className='row'>
-            <div className='col-md-6 col-xs-12'>
-              <FormInput
-                isPassword
-                label='Mật khẩu'
-                name='password'
-                control={control}
-                error={errors.password}
-                placeholder='Nhập mật khẩu'
-                rules={{
-                  required: 'Mật khẩu không được để trống',
-                  minLength: {
-                    value: 6,
-                    message: 'Mật khẩu phải có ít nhất 6 ký tự',
-                  },
-                }}
-              />
-            </div>
-            <div className='col-md-6 col-xs-12'>
-              <FormInput
-                isPassword
-                label='Xác nhận mật khẩu'
-                name='passwordConfirm'
-                control={control}
-                error={errors.passwordConfirm}
-                placeholder='Nhập mật khẩu'
-                rules={{
-                  required: 'Vui lòng xác nhận lại mật khẩu đã nhập',
-                  validate: (value) => {
-                    if (value !== watch('password')) {
-                      return 'Mật khẩu xác nhận không khớp';
-                    }
-                    return null;
-                  },
-                }}
-              />
-            </div>
-          </div>
-
+          <FormInput
+            isPassword
+            label='Mật khẩu'
+            name='password'
+            control={control}
+            error={errors.password}
+            placeholder='Nhập mật khẩu'
+            rules={{
+              required: 'Mật khẩu không được để trống',
+              minLength: {
+                value: 6,
+                message: 'Mật khẩu phải có ít nhất 6 ký tự',
+              },
+            }}
+          />
+          <FormInput
+            isPassword
+            label='Xác nhận mật khẩu'
+            name='passwordConfirm'
+            control={control}
+            error={errors.passwordConfirm}
+            placeholder='Nhập mật khẩu'
+            rules={{
+              required: 'Vui lòng xác nhận lại mật khẩu đã nhập',
+              validate: (value) => {
+                if (value !== watch('password')) {
+                  return 'Mật khẩu xác nhận không khớp';
+                }
+                return null;
+              },
+            }}
+          />
           <FormInput
             label='Họ và tên'
             name='fullName'

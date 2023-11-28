@@ -1,4 +1,4 @@
-import { Button, Tag } from 'antd';
+import { Avatar, Button, Tag } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -6,6 +6,7 @@ import { DynamicTable } from '../../../../core/components';
 import { AlertService, UsersService } from '../../../../core/services';
 import { storeActions } from '../../../../core/store';
 import { NavLink } from 'react-router-dom';
+import { UserOutlined } from '@ant-design/icons';
 
 const ListUsers = () => {
   const [users, setUsers] = useState([]);
@@ -30,6 +31,13 @@ const ListUsers = () => {
         dataIndex: 'fullName',
         key: 'fullName',
         render: (value) => <span className='text-capitalize'>{value}</span>,
+      },
+      {
+        title: 'Avatar',
+        dataIndex: 'avatar',
+        key: 'avatar',
+        render: (value) => <Avatar src={value} size='large' icon={<UserOutlined />} />,
+        align: 'center',
       },
       {
         title: 'Điện thoại',
@@ -105,7 +113,7 @@ const ListUsers = () => {
           hasBorder
           hasFilters
           searchByFields={['email', 'fullName', 'phone']}
-          pageSize={10}
+          pageSize={8}
         />
       </div>
     </>

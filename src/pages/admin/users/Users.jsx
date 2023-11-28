@@ -1,10 +1,21 @@
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
 const titleMap = {
   '/admin/quan-ly-nguoi-dung/tao-tai-khoan': 'tạo tài khoản',
   '/admin/quan-ly-nguoi-dung/danh-sach-nguoi-dung': 'danh sách người dùng',
-  '/admin/quan-ly-nguoi-dung/chi-tiet-nguoi-dung': 'chi tiết người dùng',
+  '/admin/quan-ly-nguoi-dung/chi-tiet-nguoi-dung': (
+    <>
+      <div className='d-flex align-items-center justify-content-between pr-3'>
+        chi tiết người dùng
+        <NavLink to='/admin/quan-ly-nguoi-dung/danh-sach-nguoi-dung'>
+          <Button icon={<ArrowLeftOutlined />}>Trở lại danh sách</Button>
+        </NavLink>
+      </div>
+    </>
+  ),
 };
 
 const Users = () => {
