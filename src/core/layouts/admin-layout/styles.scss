@@ -4,5 +4,9 @@
 }
 
 .admin-sidebar {
-  min-width: 260px !important;
+  min-width: 268px !important;
+
+  .ant-menu-submenu-arrow {
+    right: 0px !important;
+  }
 }

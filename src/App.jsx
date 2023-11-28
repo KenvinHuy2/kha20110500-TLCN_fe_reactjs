@@ -8,7 +8,15 @@ const Home = lazy(() => import('./pages/home'));
 
 // Admin pages
 const Dashboard = lazy(() => import('./pages/admin/dashboard'));
+
+const Store = lazy(() => import('./pages/admin/store'));
+const Statistics = lazy(() => import('./pages/admin/store/statistics'));
+const BannerSettings = lazy(() => import('./pages/admin/store/banner-settings'));
+
 const Users = lazy(() => import('./pages/admin/users'));
+const ListUsers = lazy(() => import('./pages/admin/users/list-users'));
+const CreateUser = lazy(() => import('./pages/admin/users/create-user'));
+
 const Orders = lazy(() => import('./pages/admin/orders'));
 const Products = lazy(() => import('./pages/admin/products'));
 
@@ -23,8 +31,32 @@ const App = () => {
           element: <LazyLoadComponent component={<Dashboard />} />,
         },
         {
-          path: 'quan-ly-tai-khoan',
+          path: 'cua-hang',
+          element: <LazyLoadComponent component={<Store />} />,
+          children: [
+            {
+              path: 'thong-ke-doanh-thu',
+              element: <LazyLoadComponent component={<Statistics />} />,
+            },
+            {
+              path: 'thiet-lap-banner',
+              element: <LazyLoadComponent component={<BannerSettings />} />,
+            },
+          ],
+        },
+        {
+          path: 'quan-ly-nguoi-dung',
           element: <LazyLoadComponent component={<Users />} />,
+          children: [
+            {
+              path: 'danh-sach-nguoi-dung',
+              element: <LazyLoadComponent component={<ListUsers />} />,
+            },
+            {
+              path: 'tao-tai-khoan',
+              element: <LazyLoadComponent component={<CreateUser />} />,
+            },
+          ],
         },
         {
           path: 'quan-ly-don-hang',
