@@ -7,15 +7,15 @@ import {
   TeamOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu } from 'antd';
-import React, { useMemo } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import './styles.scss';
 
 const AdminLayout = () => {
   const menuItems = useMemo(() => {
     return [
       {
-        key: 'cua-hang',
+        key: '/admin/cua-hang',
         label: 'Cửa hàng',
         icon: <HomeOutlined />,
         children: [
@@ -30,7 +30,7 @@ const AdminLayout = () => {
         ],
       },
       {
-        key: 'users',
+        key: '/admin/quan-ly-nguoi-dung',
         label: 'Quản lý người dùng',
         icon: <TeamOutlined />,
         children: [
@@ -47,7 +47,7 @@ const AdminLayout = () => {
         ],
       },
       {
-        key: 'products',
+        key: '/admin/quan-ly-san-pham',
         label: 'Quản lý sản phẩm',
         icon: <CoffeeOutlined />,
         children: [
@@ -70,17 +70,19 @@ const AdminLayout = () => {
         ],
       },
       {
-        key: 'discounts',
+        key: '/admin/quan-ly-khuyen-mai',
         label: 'Quản lý khuyến mãi',
         icon: <GiftFilled />,
         children: [
           {
-            key: '/admin/khuyen-mai/danh-sach-khuyen-mai',
-            label: <NavLink to='khuyen-mai/danh-sach-khuyen-mai'>Danh sách khuyến mãi</NavLink>,
+            key: '/admin/quan-ly-khuyen-mai/danh-sach-khuyen-mai',
+            label: (
+              <NavLink to='quan-ly-khuyen-mai/danh-sach-khuyen-mai'>Danh sách khuyến mãi</NavLink>
+            ),
           },
           {
-            key: '/admin/khuyen-mai/tao-khuyen-mai',
-            label: <NavLink to='khuyen-mai/tao-khuyen-mai'>Tạo khuyến mãi</NavLink>,
+            key: '/admin/quan-ly-khuyen-mai/tao-khuyen-mai',
+            label: <NavLink to='quan-ly-khuyen-mai/tao-khuyen-mai'>Tạo khuyến mãi</NavLink>,
           },
         ],
       },
@@ -91,6 +93,25 @@ const AdminLayout = () => {
       },
     ];
   }, []);
+  const [mainMenuKey, setMainMenuKey] = useState('');
+  const [subMenuKey, setSubMenuKey] = useState('');
+  const location = useLocation();
+
+  const handleOpenKeyChange = (keys) => {
+    const lastItem = keys[keys.length - 1];
+    setMainMenuKey(lastItem);
+  };
+
+  useEffect(() => {
+    const pathname = location.pathname;
+    if (pathname.includes('chi-tiet-nguoi-dung')) {
+      setSubMenuKey('/admin/quan-ly-nguoi-dung/danh-sach-nguoi-dung');
+      setMainMenuKey('/admin/quan-ly-nguoi-dung');
+    } else {
+      setSubMenuKey(pathname);
+      setMainMenuKey(pathname.slice(0, pathname.lastIndexOf('/')));
+    }
+  }, [location.pathname]);
 
   return (
     <>
@@ -101,7 +122,15 @@ const AdminLayout = () => {
               <div className='d-flex flex-column justify-content-start align-items-center pt-4 pl-3'>
                 <h2 className='text-white'>LOGO</h2>
                 <div className='pt-2'>
-                  <Menu theme='dark' mode='inline' items={menuItems} />
+                  <Menu
+                    theme='dark'
+                    mode='inline'
+                    items={menuItems}
+                    selectedKeys={[subMenuKey]}
+                    openKeys={[mainMenuKey]}
+                    onOpenChange={handleOpenKeyChange}
+                    key='menu'
+                  />
                 </div>
               </div>
               <div className='p-3 w-100'>

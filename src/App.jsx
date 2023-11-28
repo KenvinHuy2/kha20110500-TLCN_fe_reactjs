@@ -30,6 +30,11 @@ const Markers = lazy(() => import('./pages/admin/products/markers'));
 // Orders
 const Orders = lazy(() => import('./pages/admin/orders'));
 
+// Promotions
+const Promotions = lazy(() => import('./pages/admin/promotions'));
+const ListPromotions = lazy(() => import('./pages/admin/promotions/list-promotions'));
+const CreatePromotion = lazy(() => import('./pages/admin/promotions/create-promotion'));
+
 const App = () => {
   const routes = useRoutes([
     {
@@ -95,6 +100,20 @@ const App = () => {
             {
               path: 'markers',
               element: <LazyLoadComponent component={<Markers />} />,
+            },
+          ],
+        },
+        {
+          path: 'quan-ly-khuyen-mai',
+          element: <LazyLoadComponent component={<Promotions />} />,
+          children: [
+            {
+              path: 'danh-sach-khuyen-mai',
+              element: <LazyLoadComponent component={<ListPromotions />} />,
+            },
+            {
+              path: 'tao-khuyen-mai',
+              element: <LazyLoadComponent component={<CreatePromotion />} />,
             },
           ],
         },

@@ -13,7 +13,7 @@ const DynamicTable = ({
   hasBorder = false,
 }) => {
   const [query, setQuery] = useState('');
-  const debouncedQuery = useDebounce(query);
+  const debouncedQuery = useDebounce(query, 300);
 
   const handleQueryChange = (event) => {
     setQuery(event.target.value);
@@ -23,7 +23,7 @@ const DynamicTable = ({
     if (!debouncedQuery.trim() || !searchByFields.length || !hasFilters) {
       return dataSrc;
     }
-    const regex = new RegExp(query.trim(), 'i');
+    const regex = new RegExp(query.trim(), 'ig');
     const results = dataSrc.filter((item) => {
       return searchByFields.some((key) => {
         const value = item[key];
@@ -31,7 +31,7 @@ const DynamicTable = ({
       });
     });
     return results;
-  }, [query, dataSrc]);
+  }, [debouncedQuery, dataSrc]);
 
   return (
     <>
