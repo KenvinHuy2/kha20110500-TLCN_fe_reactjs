@@ -1,6 +1,6 @@
 import React, { lazy } from 'react';
 import { useRoutes } from 'react-router-dom';
-import { LazyLoadComponent } from './core/components';
+import { LazyLoadComponent, LoadingSpinner } from './core/components';
 import { AdminLayout, ClientLayout } from './core/layouts';
 
 // Client pages
@@ -79,7 +79,12 @@ const App = () => {
       ],
     },
   ]);
-  return <>{routes}</>;
+  return (
+    <>
+      {routes}
+      <LoadingSpinner />
+    </>
+  );
 };
 
 export default App;

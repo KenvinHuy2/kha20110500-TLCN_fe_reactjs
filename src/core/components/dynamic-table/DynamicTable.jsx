@@ -37,13 +37,13 @@ const DynamicTable = ({
     <>
       {hasFilters && (
         <Input
-          placeholder={`Search by ${searchByFields.join(', ')}`}
+          placeholder={`Tìm kiếm`}
           prefix={<SearchOutlined />}
           onChange={handleQueryChange}
           size='large'
         />
       )}
-      <div className='py-2'>
+      <div className='py-3'>
         <Table
           rowKey={rowKey}
           columns={cols}

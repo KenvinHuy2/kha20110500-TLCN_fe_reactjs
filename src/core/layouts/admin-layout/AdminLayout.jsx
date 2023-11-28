@@ -94,7 +94,7 @@ const AdminLayout = () => {
 
   return (
     <>
-      <div className='vh-100 vw-100'>
+      <div className='vh-100 vw-100 bg-white'>
         <Layout className='h-100 w-100'>
           <Layout.Sider className='h-100 admin-sidebar'>
             <div className='h-100 d-flex flex-column justify-content-between align-items-start'>
@@ -117,7 +117,7 @@ const AdminLayout = () => {
             </div>
           </Layout.Sider>
           <Layout.Content>
-            <div className='layout-content p-3'>
+            <div className='layout-content'>
               <Outlet />
             </div>
           </Layout.Content>
