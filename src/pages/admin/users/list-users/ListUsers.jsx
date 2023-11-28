@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { DynamicTable } from '../../../../core/components';
-import { UsersService } from '../../../../core/services';
-import { useDispatch } from 'react-redux';
-import { storeActions } from '../../../../core/store';
-import { Button, Space, Tag } from 'antd';
+import { Button, Tag } from 'antd';
 import moment from 'moment';
-import { InfoOutlined } from '@ant-design/icons';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { DynamicTable } from '../../../../core/components';
+import { AlertService, UsersService } from '../../../../core/services';
+import { storeActions } from '../../../../core/store';
 
 const ListUsers = () => {
   const [users, setUsers] = useState([]);
@@ -35,11 +34,12 @@ const ListUsers = () => {
         title: 'Điện thoại',
         dataIndex: 'phone',
         key: 'phone',
+        render: (value) => `0${value}`,
       },
       {
         title: 'Vai trò',
-        dataIndex: 'idAdmin',
-        key: 'idAdmin',
+        dataIndex: 'isAdmin',
+        key: 'isAdmin',
         render: (value) => (
           <Tag color={value ? 'processing' : 'warning'}>{value ? 'Admin' : 'Khách hàng'}</Tag>
         ),
@@ -84,6 +84,7 @@ const ListUsers = () => {
         const users = await UsersService.getAllUsers();
         setUsers(users);
       } catch (error) {
+        AlertService.error(error?.response?.data?.message || error.message);
       } finally {
         dispatch(storeActions.hideLoading());
       }
