@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 const titleMap = {
   '/admin/quan-ly-san-pham/loai-san-pham': 'loại sản phẩm',
+  '/admin/quan-ly-san-pham/markers': 'Markers',
 };
 
 const Products = () => {

@@ -71,7 +71,6 @@ const ProductTypes = () => {
       setProductTypes([newProductType, ...productTypes]);
       reset();
       setIsOpen(false);
-      AlertService.success('Thêm loại sản phẩm thành công');
     } catch (error) {
       AlertService.error(error?.response?.data?.message || error.message);
     } finally {
