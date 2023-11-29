@@ -12,6 +12,7 @@ const FormDropdown = ({
   dropdownOptions,
   hasSearch,
   isDisabled,
+  isMultiple = false,
 }) => {
   return (
     <>
@@ -23,11 +24,14 @@ const FormDropdown = ({
           render={({ field }) => (
             <Select
               {...field}
+              mode={isMultiple ? 'multiple' : undefined}
               placeholder={placeholder}
               options={dropdownOptions}
               showSearch={hasSearch}
               size='large'
               disabled={isDisabled}
+              allowClear={true}
+              maxTagCount={2}
             />
           )}
         />
