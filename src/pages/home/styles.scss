@@ -1,0 +1,39 @@
+#home {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center right;
+
+  .home-intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 80px;
+    padding: 60px 0;
+
+    &:last-child {
+      flex-direction: row-reverse;
+    }
+
+    img {
+      height: 530px;
+      width: 530px;
+      object-fit: cover;
+      display: inline-block;
+      border-radius: 4px;
+    }
+
+    h4 {
+      color: #0c713d;
+      line-height: 1.4;
+    }
+
+    p {
+      text-align: justify;
+    }
+
+    button:hover {
+      color: #0c713d;
+      border: 1px solid #0c713d;
+    }
+  }
+}

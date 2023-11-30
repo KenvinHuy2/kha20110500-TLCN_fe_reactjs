@@ -1,3 +1,4 @@
+import './App.scss';
 import React, { lazy } from 'react';
 import { useRoutes } from 'react-router-dom';
 import { LazyLoadComponent, LoadingSpinner } from './core/components';
