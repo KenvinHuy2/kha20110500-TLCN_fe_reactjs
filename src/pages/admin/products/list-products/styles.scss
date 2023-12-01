@@ -1,0 +1,12 @@
+#list-products {
+  .products {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    align-content: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-bottom: 24px;
+    min-height: calc(100vh - 232px);
+  }
+}

@@ -1,0 +1,21 @@
+#teas {
+  .teas-title {
+    font-family: 'Lora', serif !important;
+    color: #0c713d;
+  }
+
+  .center-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .list-products {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+}
