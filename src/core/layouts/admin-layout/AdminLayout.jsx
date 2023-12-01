@@ -23,10 +23,6 @@ const AdminLayout = () => {
             key: '/admin/cua-hang/thong-ke-doanh-thu',
             label: <NavLink to='cua-hang/thong-ke-doanh-thu'>Thống kê doanh thu</NavLink>,
           },
-          {
-            key: '/admin/cua-hang/thiet-lap-banner',
-            label: <NavLink to='cua-hang/thiet-lap-banner'>Thiết lập banner</NavLink>,
-          },
         ],
       },
       {

@@ -177,7 +177,7 @@ const ListProducts = () => {
             ))
           ) : (
             <div className='d-flex justify-content-center align-items-center w-100'>
-              <Empty />
+              <Empty description='Không tìm thấy sản phẩm nào' />
             </div>
           )}
         </div>

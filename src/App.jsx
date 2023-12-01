@@ -18,7 +18,6 @@ const Dashboard = lazy(() => import('./pages/admin/dashboard'));
 // Store
 const Store = lazy(() => import('./pages/admin/store'));
 const Statistics = lazy(() => import('./pages/admin/store/statistics'));
-const BannerSettings = lazy(() => import('./pages/admin/store/banner-settings'));
 
 // Users
 const Users = lazy(() => import('./pages/admin/users'));
@@ -58,10 +57,6 @@ const App = () => {
             {
               path: 'thong-ke-doanh-thu',
               element: <LazyLoadComponent component={<Statistics />} />,
-            },
-            {
-              path: 'thiet-lap-banner',
-              element: <LazyLoadComponent component={<BannerSettings />} />,
             },
           ],
         },
