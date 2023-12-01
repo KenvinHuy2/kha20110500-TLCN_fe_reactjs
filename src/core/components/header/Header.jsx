@@ -1,8 +1,8 @@
+import { LoginOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { Button, Space } from 'antd';
 import React, { memo } from 'react';
-import './styles.scss';
-import { Button, Space, Tooltip } from 'antd';
-import { SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
+import './styles.scss';
 
 const menus = [
   {
@@ -49,7 +49,7 @@ const Header = () => {
             <div className='logo-main'>LOGO</div>
             <div className='actions'>
               <Space size='middle'>
-                <Button type='text' size='large'>
+                <Button type='text' size='large' icon={<LoginOutlined />}>
                   Đăng nhập
                 </Button>
                 <Button size='large' icon={<ShoppingCartOutlined />} className='btn-cart'>
@@ -70,9 +70,6 @@ const Header = () => {
                   {item.label}
                 </NavLink>
               ))}
-              <Tooltip title='Tìm kiếm'>
-                <Button icon={<SearchOutlined />} size='large' type='text'></Button>
-              </Tooltip>
             </div>
           </div>
         </div>

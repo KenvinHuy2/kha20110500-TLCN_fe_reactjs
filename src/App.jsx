@@ -1,11 +1,16 @@
-import './App.scss';
 import React, { lazy } from 'react';
 import { useRoutes } from 'react-router-dom';
+import './App.scss';
 import { LazyLoadComponent, LoadingSpinner } from './core/components';
 import { AdminLayout, ClientLayout } from './core/layouts';
 
 // Client pages
 const Home = lazy(() => import('./pages/home'));
+const Teas = lazy(() => import('./pages/teas'));
+const Coffees = lazy(() => import('./pages/coffees'));
+const Drinks = lazy(() => import('./pages/drinks'));
+const ClientPromotions = lazy(() => import('./pages/promotions'));
+const AboutUs = lazy(() => import('./pages/about-us'));
 
 // Admin pages
 const Dashboard = lazy(() => import('./pages/admin/dashboard'));
@@ -127,6 +132,26 @@ const App = () => {
         {
           index: true,
           element: <LazyLoadComponent component={<Home />} />,
+        },
+        {
+          path: 'ca-phe',
+          element: <LazyLoadComponent component={<Coffees />} />,
+        },
+        {
+          path: 'tra',
+          element: <LazyLoadComponent component={<Teas />} />,
+        },
+        {
+          path: 'thuc-uong',
+          element: <LazyLoadComponent component={<Drinks />} />,
+        },
+        {
+          path: 'khuyen-mai',
+          element: <LazyLoadComponent component={<ClientPromotions />} />,
+        },
+        {
+          path: 've-chung-toi',
+          element: <LazyLoadComponent component={<AboutUs />} />,
         },
       ],
     },
