@@ -1,5 +1,5 @@
 import { Form } from 'antd';
-import React, { memo } from 'react';
+import React from 'react';
 import { Controller } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -21,4 +21,4 @@ const FormTextArea = ({ label, name, placeholder, control, error, rules }) => {
   );
 };
 
-export default memo(FormTextArea);
+export default FormTextArea;

@@ -97,7 +97,7 @@ const Markers = () => {
   return (
     <>
       <div className='pt-2 px-3'>
-        <div className='d-flex align-items-center justify-content-end'>
+        <div className='d-flex align-items-center justify-content-start'>
           <Button
             type='primary'
             size='large'

@@ -1,5 +1,5 @@
 import { Form, Switch } from 'antd';
-import React, { memo } from 'react';
+import React from 'react';
 import { Controller } from 'react-hook-form';
 
 const FormSwitch = ({ label, name, control }) => {
@@ -17,4 +17,4 @@ const FormSwitch = ({ label, name, control }) => {
   );
 };
 
-export default memo(FormSwitch);
+export default FormSwitch;

@@ -1,5 +1,5 @@
 import { Form, Select } from 'antd';
-import React, { memo } from 'react';
+import React from 'react';
 import { Controller } from 'react-hook-form';
 
 const FormDropdown = ({
@@ -13,6 +13,7 @@ const FormDropdown = ({
   hasSearch,
   isDisabled,
   isMultiple = false,
+  allowClear = true,
 }) => {
   return (
     <>
@@ -30,7 +31,7 @@ const FormDropdown = ({
               showSearch={hasSearch}
               size='large'
               disabled={isDisabled}
-              allowClear={true}
+              allowClear={allowClear}
               maxTagCount={2}
             />
           )}
@@ -40,4 +41,4 @@ const FormDropdown = ({
   );
 };
 
-export default memo(FormDropdown);
+export default FormDropdown;

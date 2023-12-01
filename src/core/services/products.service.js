@@ -9,4 +9,11 @@ export const ProductsService = {
     });
     return data.responseData;
   },
+
+  getAllProducts: async (filterOptions, page, pageSize) => {
+    const { data } = await axiosClient.get('/api/products', {
+      params: { ...filterOptions, page, pageSize },
+    });
+    return data.responseData;
+  },
 };

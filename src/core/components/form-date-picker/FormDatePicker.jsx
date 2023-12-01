@@ -1,5 +1,5 @@
 import { DatePicker, Form } from 'antd';
-import React, { memo } from 'react';
+import React from 'react';
 import { Controller } from 'react-hook-form';
 
 const FormDatePicker = ({ label, error, name, control, rules, placeholder, isDisabled }) => {
@@ -26,4 +26,4 @@ const FormDatePicker = ({ label, error, name, control, rules, placeholder, isDis
   );
 };
 
-export default memo(FormDatePicker);
+export default FormDatePicker;

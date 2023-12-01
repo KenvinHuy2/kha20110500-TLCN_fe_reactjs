@@ -1,6 +1,6 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { Input, Table } from 'antd';
-import { memo, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useDebounce } from '../../hooks';
 
 const DynamicTable = ({
@@ -56,4 +56,4 @@ const DynamicTable = ({
   );
 };
 
-export default memo(DynamicTable);
+export default DynamicTable;

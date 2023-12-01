@@ -9,3 +9,4 @@ export { default as FormTextArea } from './form-text-area/FormTextArea';
 export { default as Header } from './header/Header';
 export { default as LazyLoadComponent } from './lazy-load-component/LazyLoadComponent';
 export { default as LoadingSpinner } from './loading-spinner/LoadingSpinner';
+export { default as ProductCard } from './product-card/ProductCard';

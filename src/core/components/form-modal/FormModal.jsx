@@ -1,5 +1,5 @@
 import { Button, Modal } from 'antd';
-import React, { memo } from 'react';
+import React from 'react';
 
 const FormModal = ({
   isOpen,
@@ -36,4 +36,4 @@ const FormModal = ({
   );
 };
 
-export default memo(FormModal);
+export default FormModal;

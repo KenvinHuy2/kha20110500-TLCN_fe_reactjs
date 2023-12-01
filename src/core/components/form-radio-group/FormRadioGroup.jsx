@@ -1,5 +1,5 @@
 import { Form, Radio } from 'antd';
-import React, { memo } from 'react';
+import React from 'react';
 import { Controller } from 'react-hook-form';
 
 const FormRadioGroup = ({ label, error, name, control, rules, radioOptions = [], isDisabled }) => {
@@ -25,4 +25,4 @@ const FormRadioGroup = ({ label, error, name, control, rules, radioOptions = [],
   );
 };
 
-export default memo(FormRadioGroup);
+export default FormRadioGroup;

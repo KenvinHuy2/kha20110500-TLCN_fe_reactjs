@@ -1,5 +1,5 @@
 import { Form, Input } from 'antd';
-import React, { memo } from 'react';
+import React from 'react';
 import { Controller } from 'react-hook-form';
 
 const FormInput = ({
@@ -45,4 +45,4 @@ const FormInput = ({
   );
 };
 
-export default memo(FormInput);
+export default FormInput;
