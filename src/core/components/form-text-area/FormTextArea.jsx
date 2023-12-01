@@ -13,11 +13,7 @@ const FormTextArea = ({ label, name, placeholder, control, error, rules }) => {
           control={control}
           rules={rules}
           render={({ field }) => (
-            <ReactQuill
-              {...field}
-              placeholder={placeholder}
-              style={{ maxHeight: 300, overflowY: 'auto' }}
-            />
+            <ReactQuill {...field} placeholder={placeholder} style={{ overflowY: 'auto' }} />
           )}
         />
       </Form.Item>

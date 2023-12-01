@@ -4,6 +4,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 const titleMap = {
   '/admin/quan-ly-san-pham/loai-san-pham': 'loại sản phẩm',
   '/admin/quan-ly-san-pham/markers': 'Markers',
+  '/admin/quan-ly-san-pham/them-san-pham': 'thêm sản phẩm',
+  '/admin/quan-ly-san-pham/danh-sach-san-pham': 'danh sách sản phẩm',
 };
 
 const Products = () => {

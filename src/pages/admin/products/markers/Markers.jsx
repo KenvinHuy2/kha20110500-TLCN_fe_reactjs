@@ -113,6 +113,7 @@ const Markers = () => {
             hasFilters
             searchByFields={['name']}
             hasBorder
+            rowKey='_id'
           />
         </div>
         <FormModal
