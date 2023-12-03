@@ -49,12 +49,14 @@ const Header = () => {
             <div className='logo-main'>LOGO</div>
             <div className='actions'>
               <Space size='middle'>
-                <Button type='text' size='large' icon={<LoginOutlined />}>
-                  Đăng nhập
-                </Button>
-                <Button size='large' icon={<ShoppingCartOutlined />} className='btn-cart'>
-                  Giỏ hàng
-                </Button>
+                <NavLink to='/dang-nhap'>
+                  <Button type='text' size='large' icon={<LoginOutlined />}>
+                    Đăng nhập
+                  </Button>
+                  <Button size='large' icon={<ShoppingCartOutlined />} className='btn-cart'>
+                    Giỏ hàng
+                  </Button>
+                </NavLink>
               </Space>
             </div>
           </div>

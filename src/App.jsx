@@ -7,10 +7,12 @@ import { AdminLayout, ClientLayout } from './core/layouts';
 // Client pages
 const Home = lazy(() => import('./pages/home'));
 const Teas = lazy(() => import('./pages/teas'));
-const Coffees = lazy(() => import('./pages/coffees'));
+const Login = lazy(() => import('./pages/login'));
 const Drinks = lazy(() => import('./pages/drinks'));
-const ClientPromotions = lazy(() => import('./pages/promotions'));
+const Coffees = lazy(() => import('./pages/coffees'));
 const AboutUs = lazy(() => import('./pages/about-us'));
+const Register = lazy(() => import('./pages/register'));
+const ClientPromotions = lazy(() => import('./pages/promotions'));
 
 // Admin pages
 const Dashboard = lazy(() => import('./pages/admin/dashboard'));
@@ -27,10 +29,10 @@ const UserDetail = lazy(() => import('./pages/admin/users/user-detail'));
 
 // Products
 const Products = lazy(() => import('./pages/admin/products'));
+const Markers = lazy(() => import('./pages/admin/products/markers'));
+const ProductTypes = lazy(() => import('./pages/admin/products/product-types'));
 const ListProducts = lazy(() => import('./pages/admin/products/list-products'));
 const CreateProduct = lazy(() => import('./pages/admin/products/create-product'));
-const ProductTypes = lazy(() => import('./pages/admin/products/product-types'));
-const Markers = lazy(() => import('./pages/admin/products/markers'));
 
 // Orders
 const Orders = lazy(() => import('./pages/admin/orders'));
@@ -147,6 +149,14 @@ const App = () => {
         {
           path: 've-chung-toi',
           element: <LazyLoadComponent component={<AboutUs />} />,
+        },
+        {
+          path: 'dang-nhap',
+          element: <LazyLoadComponent component={<Login />} />,
+        },
+        {
+          path: 'dang-ky',
+          element: <LazyLoadComponent component={<Register />} />,
         },
       ],
     },

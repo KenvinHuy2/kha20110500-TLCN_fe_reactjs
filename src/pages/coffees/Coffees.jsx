@@ -99,7 +99,7 @@ const Coffees = () => {
           <img src='/assets/images/ca_phe_banner.jpeg' alt='Coffee banner' width='100%' />
         </div>
         <div className='pt-5'>
-          <h1 className='text-center coffee-title'>HẠT CÀ PHÊ PHÚC LONG</h1>
+          <h1 className='text-center page-title'>HẠT CÀ PHÊ PHÚC LONG</h1>
         </div>
         <div className='py-3 center-box'>
           <img src='/assets/images/divider.png' alt='Coffee divider' />

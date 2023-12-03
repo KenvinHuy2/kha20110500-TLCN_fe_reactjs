@@ -30,3 +30,8 @@ h5,
 h6 {
   font-weight: 600 !important;
 }
+
+.page-title {
+  font-family: 'Lora', serif !important;
+  color: #0c713d;
+}

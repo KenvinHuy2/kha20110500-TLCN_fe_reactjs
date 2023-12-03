@@ -99,7 +99,7 @@ const Teas = () => {
           <img src='/assets/images/teas_banner.jpeg' alt='Teas banner' width='100%' />
         </div>
         <div className='pt-5'>
-          <h1 className='text-center teas-title'>LÁ TRÀ PHÚC LONG</h1>
+          <h1 className='text-center page-title'>LÁ TRÀ PHÚC LONG</h1>
         </div>
         <div className='py-3 center-box'>
           <img src='/assets/images/divider.png' alt='divider' />
