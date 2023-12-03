@@ -53,6 +53,8 @@ const Header = () => {
                   <Button type='text' size='large' icon={<LoginOutlined />}>
                     Đăng nhập
                   </Button>
+                </NavLink>
+                <NavLink to='/gio-hang'>
                   <Button size='large' icon={<ShoppingCartOutlined />} className='btn-cart'>
                     Giỏ hàng
                   </Button>

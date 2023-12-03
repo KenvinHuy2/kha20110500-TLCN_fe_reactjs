@@ -6,6 +6,7 @@ import { AdminLayout, ClientLayout } from './core/layouts';
 
 // Client pages
 const Home = lazy(() => import('./pages/home'));
+const Cart = lazy(() => import('./pages/cart'));
 const Teas = lazy(() => import('./pages/teas'));
 const Login = lazy(() => import('./pages/login'));
 const Drinks = lazy(() => import('./pages/drinks'));
@@ -157,6 +158,10 @@ const App = () => {
         {
           path: 'dang-ky',
           element: <LazyLoadComponent component={<Register />} />,
+        },
+        {
+          path: 'gio-hang',
+          element: <LazyLoadComponent component={<Cart />} />,
         },
       ],
     },
