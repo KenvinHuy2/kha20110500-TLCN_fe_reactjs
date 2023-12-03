@@ -1,5 +1,3 @@
-import React from 'react';
-import './styles.scss';
 import {
   CopyrightCircleOutlined,
   FacebookOutlined,
@@ -7,6 +5,8 @@ import {
   YoutubeOutlined,
 } from '@ant-design/icons';
 import { Space } from 'antd';
+import React from 'react';
+import './styles.scss';
 
 const Footer = () => {
   return (
@@ -33,15 +33,6 @@ const Footer = () => {
             </p>
           </div>
           <div className='col-md-3 col-xd-12'>
-            <h6 className='text-uppercase'>CÔNG TY</h6>
-            <p>Tầm nhìn</p>
-            <p>Sứ mệnh</p>
-            <p>Giá trị cốt lõi</p>
-            <p>Lĩnh vực hoạt động</p>
-            <h6 className='text-uppercase'>KHUYẾN MÃI</h6>
-            <p>Tin khuyến mãi</p>
-          </div>
-          <div className='col-md-3 col-xd-12'>
             <h6 className='text-uppercase'>TUYỂN DỤNG</h6>
             <p>HTCH</p>
             <p>Kiosk</p>
@@ -51,6 +42,15 @@ const Footer = () => {
             <p>Điều khoản & Điều kiện thành viên</p>
             <p>Điều khoản & Điều kiện Thẻ trả trước</p>
             <p>FAQ</p>
+          </div>
+          <div className='col-md-3 col-xd-12'>
+            <h6 className='text-uppercase'>CÔNG TY</h6>
+            <p>Tầm nhìn</p>
+            <p>Sứ mệnh</p>
+            <p>Giá trị cốt lõi</p>
+            <p>Lĩnh vực hoạt động</p>
+            <h6 className='text-uppercase'>KHUYẾN MÃI</h6>
+            <p>Tin khuyến mãi</p>
           </div>
           <div className='col-md-3 col-xd-12'>
             <h6 className='text-uppercase'>LIÊN HỆ</h6>

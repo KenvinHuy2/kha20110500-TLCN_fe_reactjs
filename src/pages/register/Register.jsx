@@ -27,9 +27,6 @@ const Register = () => {
 
   return (
     <>
-      <div className='register-banner'>
-        <img src='/assets/images/carousel_2.jpeg' alt='Register banner' width='100%' />
-      </div>
       <div className='container'>
         <div className='pt-4'>
           <h1 className='text-center page-title'>ĐĂNG KÝ TÀI KHOẢN</h1>

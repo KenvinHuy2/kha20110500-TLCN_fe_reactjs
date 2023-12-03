@@ -1,7 +1,8 @@
-import { KeyOutlined, LoginOutlined } from '@ant-design/icons';
+import { KeyOutlined, LoginOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Form } from 'antd';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { NavLink } from 'react-router-dom';
 import { FormInput } from '../../core/components';
 import './styles.scss';
 
@@ -24,9 +25,6 @@ const Login = () => {
 
   return (
     <>
-      <div className='login-banner'>
-        <img src='/assets/images/carousel_1.jpeg' alt='Login banner' width='100%' />
-      </div>
       <div className='container'>
         <div className='pt-4'>
           <h1 className='text-center page-title'>ĐĂNG NHẬP</h1>
@@ -34,7 +32,7 @@ const Login = () => {
         <div className='d-flex justify-content-center align-items-center pb-3'>
           <img src='/assets/images/divider.png' alt='Coffee divider' />
         </div>
-        <div className='d-flex justify-content-center align-items center py-3'>
+        <div className='d-flex justify-content-center align-items center py-3 form-container'>
           <Form
             name='login-form'
             layout='vertical'
@@ -55,10 +53,17 @@ const Login = () => {
               control={control}
               error={errors.password}
             />
-            <div className='form-group text-right'>
-              <Button type='text' icon={<KeyOutlined />}>
-                Quên mật khẩu?
-              </Button>
+            <div className='form-group'>
+              <div className='d-flex align-items-center justify-content-between'>
+                <Button type='text' icon={<KeyOutlined />}>
+                  Quên mật khẩu?
+                </Button>
+                <NavLink to='/dang-ky'>
+                  <Button type='text' icon={<PlusOutlined />} style={{ color: '#0c713d' }}>
+                    Đăng ký tài khoản
+                  </Button>
+                </NavLink>
+              </div>
             </div>
             <div className='form-group'>
               <Button
