@@ -10,6 +10,8 @@ import { storeActions } from '../../../../core/store';
 const Markers = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [markers, setMarkers] = useState([]);
+  const [isCreate, setIsCreate] = useState(true);
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
   const dispatch = useDispatch();
   const {
@@ -45,10 +47,17 @@ const Markers = () => {
         render: (_, marker) => {
           return (
             <Space size='middle'>
-              <Button type='primary' icon={<EditOutlined />}>
+              <Button
+                type='primary'
+                icon={<EditOutlined />}
+                onClick={() => openUpdateMarkerDialog(marker)}>
                 Sửa
               </Button>
-              <Button type='primary' icon={<DeleteOutlined />} danger>
+              <Button
+                type='primary'
+                icon={<DeleteOutlined />}
+                danger
+                onClick={() => handleDeleteMarker(marker)}>
                 Xoá
               </Button>
             </Space>
@@ -57,10 +66,10 @@ const Markers = () => {
         align: 'center',
       },
     ];
-  }, []);
+  }, [markers.length]);
 
   const clearAndCloseForm = () => {
-    reset();
+    reset({ markerName: '' });
     setIsOpen(false);
   };
 
@@ -76,6 +85,60 @@ const Markers = () => {
     } finally {
       dispatch(storeActions.hideLoading());
     }
+  };
+
+  const openUpdateMarkerDialog = (marker) => {
+    reset({ markerName: marker.name });
+    setSelectedMarker(marker);
+    setIsCreate(false);
+    setIsOpen(true);
+  };
+
+  const handleUpdateMarker = async (formValue) => {
+    const { markerName } = formValue;
+    if (markerName.toLowerCase() === selectedMarker.name.toLowerCase()) {
+      clearAndCloseForm();
+      return;
+    }
+
+    try {
+      dispatch(storeActions.showLoading());
+      const updatedMarker = await MarkersService.updateMarker(selectedMarker._id, formValue);
+      const idx = markers.findIndex((item) => item._id === updatedMarker._id);
+      if (idx !== -1) {
+        markers[idx] = {
+          ...updatedMarker,
+        };
+        setMarkers([...markers]);
+        clearAndCloseForm();
+      } else {
+        AlertService.error('Không tìm thấy id sau khi cập nhật loại marker');
+      }
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
+  };
+
+  const handleDeleteMarker = async (marker) => {
+    AlertService.confirm(`Bạn có chắc là muốn xoá marker: ${marker.name}`).then(
+      async ({ isConfirmed }) => {
+        if (isConfirmed) {
+          try {
+            dispatch(storeActions.showLoading());
+            await MarkersService.deleteMarker(marker._id);
+            reset();
+            setIsOpen(false);
+            setMarkers(markers.filter((item) => item._id !== marker._id));
+          } catch (error) {
+            AlertService.error(error?.response?.data?.message || error.message);
+          } finally {
+            dispatch(storeActions.hideLoading());
+          }
+        }
+      },
+    );
   };
 
   useEffect(() => {
@@ -117,12 +180,12 @@ const Markers = () => {
           />
         </div>
         <FormModal
-          title='Thêm marker'
           isOpen={isOpen}
+          cancelBtnText='Huỷ'
           onCancel={clearAndCloseForm}
-          onSubmit={handleSubmit(handleCreateMarker)}
-          okBtnText='Tạo'
-          cancelBtnText='Huỷ'>
+          okBtnText={isCreate ? 'Tạo' : 'Cập nhật'}
+          title={isCreate ? 'Thêm marker' : 'Cập nhật marker'}
+          onSubmit={isCreate ? handleSubmit(handleCreateMarker) : handleSubmit(handleUpdateMarker)}>
           <Form name='create-marker-form' layout='vertical' autoComplete='false'>
             <FormInput
               label='Tên marker'

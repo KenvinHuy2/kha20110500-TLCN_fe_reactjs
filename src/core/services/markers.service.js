@@ -10,4 +10,14 @@ export const MarkersService = {
     const { data } = await axiosClient.post('/api/markers', payload);
     return data.responseData;
   },
+
+  updateMarker: async (markerId, payload) => {
+    const { data } = await axiosClient.patch(`/api/markers/${markerId}`, payload);
+    return data.responseData;
+  },
+
+  deleteMarker: async (markerId) => {
+    const { data } = await axiosClient.delete(`/api/markers/${markerId}`);
+    return data.responseData;
+  },
 };
