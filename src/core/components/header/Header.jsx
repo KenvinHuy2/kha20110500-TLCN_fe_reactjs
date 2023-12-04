@@ -44,9 +44,11 @@ const Header = () => {
         <div className='container'>
           <div className='header-top'>
             <div className='logo-delivery'>
-              <img src='/assets/images/delivery.png' alt='Logo delivery' />
+              <NavLink to='/'>
+                <img src='/assets/images/logo.jpeg' alt='Logo' width={64} height={64} />
+                <h3 className='page-title'>LaKong - Coffee & Teas</h3>
+              </NavLink>
             </div>
-            <div className='logo-main'>LOGO</div>
             <div className='actions'>
               <Space size='middle'>
                 <NavLink to='/dang-nhap'>

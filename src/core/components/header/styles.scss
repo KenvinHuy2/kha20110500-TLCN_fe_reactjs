@@ -11,6 +11,15 @@
     align-items: center;
     justify-content: space-between;
 
+    .logo-delivery {
+      a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+    }
+
     .actions {
       .btn-cart {
         border: 1px solid #0c713d;
