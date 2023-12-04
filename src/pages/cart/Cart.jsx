@@ -1,14 +1,10 @@
 import { DollarOutlined } from '@ant-design/icons';
-import {Button, Empty } from 'antd';
+import { Button, Empty } from 'antd';
 import React from 'react';
 import { NumericFormat } from 'react-number-format';
 import './styles.scss';
-import { storeSelectors } from '../../core/store';
-import { useSelector } from 'react-redux';
 
 const Cart = () => {
-  const products = useSelector(storeSelectors.selectProducts);
-  console.log(products)
   return (
     <>
       <div className='container' id='cart'>
@@ -19,23 +15,7 @@ const Cart = () => {
           <img src='/assets/images/divider.png' alt='divider' />
         </div>
         <div className='py-3'>
-          {products.length > 0 ? <>
-            {products.map((product, index) =>
-              <div className='cart-card p-1' key={index}>
-                <div className='cart-card-image'>
-                  <img src={product.image} alt={product.name} />
-                </div>
-                <div className='cart-card-content'>
-                <h6 className='cart-card-name'>{product.name}</h6>
-                <div className='cart-card-sub'>
-                  <div className='cart-card-size'>Size: <span>{product.size}</span></div>
-                </div>
-                </div>
-              </div>
-            )}
-          </> : <div className='d-flex align-items-center justify-content-center'>
-            <Empty description='Không có sản phẩm nào trong giỏ hàng' />
-          </div>}
+          <Empty description='Không có sản phẩm nào trong giỏ hàng' />
         </div>
       </div>
       <div className='card-total'>

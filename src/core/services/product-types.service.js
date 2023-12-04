@@ -10,4 +10,14 @@ export const ProductTypesService = {
     const { data } = await axiosClient.post('/api/product-types', payload);
     return data.responseData;
   },
+
+  updateProductType: async (productTypeId, payload) => {
+    const { data } = await axiosClient.patch(`/api/product-types/${productTypeId}`, payload);
+    return data.responseData;
+  },
+
+  deleteProductType: async (productTypeId) => {
+    const { data } = await axiosClient.delete(`/api/product-types/${productTypeId}`);
+    return data.responseData;
+  },
 };

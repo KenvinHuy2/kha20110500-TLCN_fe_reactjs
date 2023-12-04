@@ -9,7 +9,9 @@ import { storeActions } from '../../../../core/store';
 
 const ProductTypes = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCreate, setIsCreate] = useState(true);
   const [productTypes, setProductTypes] = useState([]);
+  const [selectedProductType, setSelectedProductType] = useState(null);
 
   const dispatch = useDispatch();
   const {
@@ -45,10 +47,17 @@ const ProductTypes = () => {
         render: (_, productType) => {
           return (
             <Space size='middle'>
-              <Button type='primary' icon={<EditOutlined />}>
+              <Button
+                type='primary'
+                icon={<EditOutlined />}
+                onClick={() => openUpdateProductTypeDialog(productType)}>
                 Sửa
               </Button>
-              <Button type='primary' icon={<DeleteOutlined />} danger>
+              <Button
+                type='primary'
+                icon={<DeleteOutlined />}
+                danger
+                onClick={() => handleDeleteProductType(productType)}>
                 Xoá
               </Button>
             </Space>
@@ -57,20 +66,22 @@ const ProductTypes = () => {
         align: 'center',
       },
     ];
-  }, []);
+  }, [productTypes.length]);
 
   const clearAndCloseForm = () => {
-    reset();
+    reset({ productTypeName: '' });
     setIsOpen(false);
+    setIsCreate(true);
+    setSelectedProductType(null);
   };
 
   const handleCreateProductType = async (formData) => {
     try {
       dispatch(storeActions.showLoading());
       const newProductType = await ProductTypesService.createProductType(formData);
-      setProductTypes([newProductType, ...productTypes]);
       reset();
       setIsOpen(false);
+      setProductTypes([newProductType, ...productTypes]);
     } catch (error) {
       AlertService.error(error?.response?.data?.message || error.message);
     } finally {
@@ -78,12 +89,69 @@ const ProductTypes = () => {
     }
   };
 
+  const openUpdateProductTypeDialog = (productType) => {
+    reset({ productTypeName: productType.name });
+    setSelectedProductType(productType);
+    setIsCreate(false);
+    setIsOpen(true);
+  };
+
+  const handleUpdateProductType = async (formValue) => {
+    const { productTypeName } = formValue;
+    if (productTypeName.toLowerCase() === selectedProductType.name.toLowerCase()) {
+      clearAndCloseForm();
+      return;
+    }
+
+    try {
+      dispatch(storeActions.showLoading());
+      const updatedProductType = await ProductTypesService.updateProductType(
+        selectedProductType._id,
+        formValue,
+      );
+      const idx = productTypes.findIndex((item) => item._id === updatedProductType._id);
+      if (idx !== -1) {
+        productTypes[idx] = {
+          ...updatedProductType,
+        };
+        setProductTypes([...productTypes]);
+        clearAndCloseForm();
+      } else {
+        AlertService.error('Không tìm thấy id sau khi cập nhật loại sản phẩm');
+      }
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
+  };
+
+  const handleDeleteProductType = async (productType) => {
+    AlertService.confirm(`Bạn có chắc là muốn xoá loại sản phẩm: ${productType.name}`).then(
+      async ({ isConfirmed }) => {
+        if (isConfirmed) {
+          try {
+            dispatch(storeActions.showLoading());
+            await ProductTypesService.deleteProductType(productType._id);
+            reset();
+            setIsOpen(false);
+            setProductTypes(productTypes.filter((item) => item._id !== productType._id));
+          } catch (error) {
+            AlertService.error(error?.response?.data?.message || error.message);
+          } finally {
+            dispatch(storeActions.hideLoading());
+          }
+        }
+      },
+    );
+  };
+
   useEffect(() => {
     const getAllProductTypes = async () => {
       try {
         dispatch(storeActions.showLoading());
         const productTypes = await ProductTypesService.getAllProductTypes();
-        setProductTypes(productTypes);
+        setProductTypes([...productTypes]);
       } catch (error) {
         AlertService.error(error?.response?.data?.message || error.message);
       } finally {
@@ -117,12 +185,14 @@ const ProductTypes = () => {
           />
         </div>
         <FormModal
-          title='Thêm loại sản phẩm'
           isOpen={isOpen}
+          cancelBtnText='Huỷ'
           onCancel={clearAndCloseForm}
-          onSubmit={handleSubmit(handleCreateProductType)}
-          okBtnText='Tạo'
-          cancelBtnText='Huỷ'>
+          okBtnText={isCreate ? 'Tạo' : 'Cập nhật'}
+          onSubmit={
+            isCreate ? handleSubmit(handleCreateProductType) : handleSubmit(handleUpdateProductType)
+          }
+          title={isCreate ? 'Thêm loại sản phẩm' : 'Cập nhật loại sản phẩm'}>
           <Form name='create-product-type-form' layout='vertical' autoComplete='false'>
             <FormInput
               label='Tên loại sản phẩm'

@@ -3,7 +3,7 @@ import { createSelector, createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isLoading: false,
   currentUser: null,
-  products: []
+  products: [],
 };
 
 const sharedSlice = createSlice({
@@ -16,9 +16,6 @@ const sharedSlice = createSlice({
     hideLoading: (state) => {
       state.isLoading = false;
     },
-    addProducts: (state, { payload }) => {
-      state.products.push(payload)
-    }
   },
 });
 
@@ -27,5 +24,4 @@ const selectSharedFeature = (state) => state.shared;
 export const sharedSelectors = {
   selectIsLoading: createSelector(selectSharedFeature, (state) => state.isLoading),
   selectCurrentUser: createSelector(selectSharedFeature, (state) => state.currentUser),
-  selectProducts: createSelector(selectSharedFeature, (state) => state.products),
 };

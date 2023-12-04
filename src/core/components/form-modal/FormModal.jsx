@@ -6,8 +6,8 @@ const FormModal = ({
   title,
   width,
   children,
-  cancelBtnText,
   okBtnText,
+  cancelBtnText,
   onCancel = () => {},
   onSubmit = () => {},
 }) => {
@@ -27,7 +27,7 @@ const FormModal = ({
           <Button htmlType='button' onClick={onCancel} size='large'>
             {cancelBtnText || 'Cancel'}
           </Button>
-          <Button type='primary' htmlType='submit' onClick={onSubmit} size='large'>
+          <Button size='large' type='primary' htmlType='submit' onClick={onSubmit}>
             {okBtnText || 'Ok'}
           </Button>
         </div>

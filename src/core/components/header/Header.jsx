@@ -3,7 +3,6 @@ import { Button, Space } from 'antd';
 import React, { memo } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './styles.scss';
-import { AlertService } from '../../services';
 
 const menus = [
   {
@@ -40,13 +39,12 @@ const menus = [
 
 const Header = () => {
   const user = JSON.parse(localStorage.getItem('user'));
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem('user');
     navigate('/');
-    AlertService.success("Đăng xuất thành công");
-  }
+  };
   return (
     <>
       <header id='client-header'>
@@ -60,15 +58,17 @@ const Header = () => {
             </div>
             <div className='actions'>
               <Space size='middle'>
-                {!user?.email ? <NavLink to='/dang-nhap'>
-                  <Button type='text' size='large' icon={<LoginOutlined />}>
-                    Đăng nhập
-                  </Button>
-                </NavLink> :
+                {!user?.email ? (
+                  <NavLink to='/dang-nhap'>
+                    <Button type='text' size='large' icon={<LoginOutlined />}>
+                      Đăng nhập
+                    </Button>
+                  </NavLink>
+                ) : (
                   <Button type='text' size='large' icon={<LoginOutlined />} onClick={handleLogout}>
                     Đăng xuất
                   </Button>
-                }
+                )}
 
                 <NavLink to='/gio-hang'>
                   <Button size='large' icon={<ShoppingCartOutlined />} className='btn-cart'>
