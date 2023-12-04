@@ -160,6 +160,7 @@ const Coffees = () => {
                   markers={product?.markers || []}
                   price={product?.defaultPrice?.price || 0}
                   image={product?.defaultImage || '/assets/images/no_images.jpeg'}
+                  prices={product?.prices}
                 />
               ))
             ) : (

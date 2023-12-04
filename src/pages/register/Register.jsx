@@ -2,8 +2,11 @@ import { Button, Form } from 'antd';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { FormDropdown, FormInput } from '../../core/components';
+import { AlertService, AuthService } from '../../core/services';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+  const navigate = useNavigate()
   const {
     handleSubmit,
     formState: { errors },
@@ -21,8 +24,20 @@ const Register = () => {
     },
   });
 
-  const handleLogin = async (formValue) => {
-    console.log(formValue);
+  const handleRegister = async (formValue) => {
+    if (formValue.passwordConfirm != formValue.password) {
+      AlertService.error("Mật khẩu nhập lại không trùng khớp!")
+    } else {
+      const { passwordConfirm, ...payload } = { ...formValue };
+      AuthService.register(payload).then(data => {
+        AlertService.success("Đăng ký thành công");
+        navigate('/')
+        localStorage.setItem('user', JSON.stringify(data));
+      }).catch(errors => {
+        AlertService.error(errors?.response.data.message)
+      })
+    }
+
   };
 
   return (
@@ -40,7 +55,7 @@ const Register = () => {
             layout='vertical'
             autoComplete='false'
             className='w-50'
-            onFinish={handleSubmit(handleLogin)}>
+            onFinish={handleSubmit(handleRegister)}>
             <FormInput
               label='Email'
               name='email'
@@ -59,10 +74,17 @@ const Register = () => {
             <FormInput
               isPassword
               label='Xác nhận mật khẩu'
-              name='password'
+              name='passwordConfirm'
               placeholder='Nhập lại mật khẩu'
               control={control}
-              error={errors.password}
+              error={errors.passwordConfirm}
+            />
+            <FormInput
+              label='Họ và Tên'
+              name='fullName'
+              placeholder='Nhập Họ và Tên'
+              control={control}
+              error={errors.fullName}
             />
             <div className='row'>
               <div className='col-md-6 col-xs-12'>
@@ -72,7 +94,11 @@ const Register = () => {
                   control={control}
                   error={errors.gender}
                   placeholder='Chọn giới tính'
-                  dropdownOptions={[]}
+                  dropdownOptions={[
+                    { value: 'Nam', label: 'Nam' },
+                    { value: 'Nữ', label: 'Nữ' },
+                    { value: 'Khác', label: 'Khác' },
+                  ]}
                 />
               </div>
               <div className='col-md-6 col-xs-12'>

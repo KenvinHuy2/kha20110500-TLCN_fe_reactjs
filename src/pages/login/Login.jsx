@@ -2,11 +2,14 @@ import { KeyOutlined, LoginOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Form } from 'antd';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { FormInput } from '../../core/components';
 import './styles.scss';
+import { AlertService, AuthService } from '../../core/services';
 
 const Login = () => {
+  const navigate = useNavigate()
+
   const {
     handleSubmit,
     formState: { errors },
@@ -20,7 +23,17 @@ const Login = () => {
   });
 
   const handleLogin = async (formValue) => {
-    console.log(formValue);
+    AuthService.login(formValue).then(data => {
+      AlertService.success("Đăng nhập thành công");
+      if(data.isAdmin){
+        navigate('/admin')
+      }else{
+        navigate('/')
+      }
+      localStorage.setItem('user', JSON.stringify(data));
+    }).catch(errors => {
+      AlertService.error(errors?.response.data.message)
+    })
   };
 
   return (
@@ -47,6 +60,7 @@ const Login = () => {
               error={errors.email}
             />
             <FormInput
+              isPassword
               label='Mật khẩu'
               name='password'
               placeholder='Nhập mật khẩu'

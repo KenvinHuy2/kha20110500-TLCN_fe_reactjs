@@ -13,7 +13,7 @@ const Home = () => {
             <p>
               Trải qua hơn 50 năm chắt chiu tinh hoa từ những búp trà xanh và hạt cà phê thượng hạng
               cùng mong muốn mang lại cho khách hàng những trải nghiệm giá trị nhất khi thưởng thức,
-              Phúc Long liên tục là thương hiệu tiên phong với nhiều ý tưởng sáng tạo đi đầu trong
+              La Long liên tục là thương hiệu tiên phong với nhiều ý tưởng sáng tạo đi đầu trong
               ngành trà và cà phê.
             </p>
             <p>

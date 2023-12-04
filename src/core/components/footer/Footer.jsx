@@ -54,7 +54,7 @@ const Footer = () => {
           </div>
           <div className='col-md-3 col-xd-12'>
             <h6 className='text-uppercase'>LIÊN HỆ</h6>
-            <p>Hệ thống cửa hàng Phúc Long Coffee & Tea</p>
+            <p>Hệ thống cửa hàng LaKong Coffee & Tea</p>
             <h6 className='text-uppercase'>ĐIỀU KHOẢN SỬ DỤNG</h6>
             <p>Chính sách bảo mật thông tin</p>
             <p>Chính sách đặt hàng</p>
