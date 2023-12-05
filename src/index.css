@@ -35,3 +35,9 @@ h6 {
   font-family: 'Lora', serif !important;
   color: #0c713d;
 }
+
+.center-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
