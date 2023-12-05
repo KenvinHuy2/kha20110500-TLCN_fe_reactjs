@@ -3,7 +3,6 @@ import { createSelector, createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isLoading: false,
   currentUser: null,
-  products: [],
 };
 
 const sharedSlice = createSlice({
@@ -15,6 +14,12 @@ const sharedSlice = createSlice({
     },
     hideLoading: (state) => {
       state.isLoading = false;
+    },
+    setCurrentUser: (state, { payload }) => {
+      state.currentUser = { ...payload };
+    },
+    resetCurrentUser: (state) => {
+      state.currentUser = null;
     },
   },
 });

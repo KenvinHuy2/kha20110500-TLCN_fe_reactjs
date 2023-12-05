@@ -1,7 +1,17 @@
-import { LoginOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Button, Space } from 'antd';
-import React, { memo } from 'react';
+import {
+  DownOutlined,
+  GiftOutlined,
+  HistoryOutlined,
+  LoginOutlined,
+  LogoutOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { Button, Dropdown, Space } from 'antd';
+import React, { memo, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { storeActions, storeSelectors } from '../../store';
 import './styles.scss';
 
 const menus = [
@@ -38,13 +48,59 @@ const menus = [
 ];
 
 const Header = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const currentUser = useSelector(storeSelectors.selectCurrentUser);
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    navigate('/');
+    localStorage.removeItem('currentUser');
+    dispatch(storeActions.resetCurrentUser());
+    return navigate('/');
   };
+
+  const subMenuItem = useMemo(() => {
+    return [
+      {
+        key: '1',
+        label: (
+          <NavLink to='thong-tin-ca-nhan'>
+            <Button size='large' type='text' icon={<UserOutlined />}>
+              Thông tin cá nhân
+            </Button>
+          </NavLink>
+        ),
+      },
+      {
+        key: '2',
+        label: (
+          <NavLink to='lich-su-dat-hang'>
+            <Button size='large' type='text' icon={<HistoryOutlined />}>
+              Lịch sử đặt hàng
+            </Button>
+          </NavLink>
+        ),
+      },
+      {
+        key: '3',
+        label: (
+          <NavLink to='khuyen-mai-cua-toi'>
+            <Button size='large' type='text' icon={<GiftOutlined />}>
+              Khuyến mãi của tôi
+            </Button>
+          </NavLink>
+        ),
+      },
+      {
+        key: '4',
+        label: (
+          <Button size='large' type='text' icon={<LogoutOutlined />} danger onClick={handleLogout}>
+            Đăng xuất
+          </Button>
+        ),
+      },
+    ];
+  }, []);
+
   return (
     <>
       <header id='client-header'>
@@ -57,19 +113,24 @@ const Header = () => {
               </NavLink>
             </div>
             <div className='actions'>
-              <Space size='middle'>
-                {!user?.email ? (
+              <Space size='small'>
+                {currentUser ? (
+                  <Dropdown menu={{ items: subMenuItem }}>
+                    <Button
+                      type='text'
+                      size='large'
+                      icon={<DownOutlined />}
+                      className='user-menu-btn'>
+                      Hi, {currentUser.fullName}
+                    </Button>
+                  </Dropdown>
+                ) : (
                   <NavLink to='/dang-nhap'>
                     <Button type='text' size='large' icon={<LoginOutlined />}>
                       Đăng nhập
                     </Button>
                   </NavLink>
-                ) : (
-                  <Button type='text' size='large' icon={<LoginOutlined />} onClick={handleLogout}>
-                    Đăng xuất
-                  </Button>
                 )}
-
                 <NavLink to='/gio-hang'>
                   <Button size='large' icon={<ShoppingCartOutlined />} className='btn-cart'>
                     Giỏ hàng

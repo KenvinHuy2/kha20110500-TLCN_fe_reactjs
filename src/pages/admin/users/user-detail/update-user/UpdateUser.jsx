@@ -144,7 +144,7 @@ const UpdateUser = ({ user }) => {
             isDisabled={true}
           />
           <FormDropdown
-            label='Phái'
+            label='Giới tính'
             name='gender'
             error={errors.gender}
             control={control}

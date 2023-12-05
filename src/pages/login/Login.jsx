@@ -6,15 +6,17 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { FormInput } from '../../core/components';
 import './styles.scss';
 import { AlertService, AuthService } from '../../core/services';
+import { useDispatch } from 'react-redux';
+import { storeActions } from '../../core/store';
 
 const Login = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const {
     handleSubmit,
     formState: { errors },
     control,
-    reset,
   } = useForm({
     defaultValues: {
       email: '',
@@ -23,17 +25,18 @@ const Login = () => {
   });
 
   const handleLogin = async (formValue) => {
-    AuthService.login(formValue).then(data => {
-      AlertService.success("Đăng nhập thành công");
-      if(data.isAdmin){
-        navigate('/admin')
-      }else{
-        navigate('/')
-      }
-      localStorage.setItem('user', JSON.stringify(data));
-    }).catch(errors => {
-      AlertService.error(errors?.response.data.message)
-    })
+    try {
+      dispatch(storeActions.showLoading());
+      const userDetail = await AuthService.login(formValue);
+      dispatch(storeActions.setCurrentUser(userDetail));
+      localStorage.setItem('currentUser', JSON.stringify(userDetail));
+      const path = userDetail.isAdmin ? '/admin' : '/';
+      return navigate(path);
+    } catch (error) {
+      AlertService.error(errors?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
   };
 
   return (
