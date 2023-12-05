@@ -4,8 +4,8 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormDropdown, FormInput } from '../../core/components';
-import { storeActions, storeSelectors } from '../../core/store';
 import { AlertService } from '../../core/services';
+import { storeActions, storeSelectors } from '../../core/store';
 
 const roleOptions = [
   {
@@ -68,7 +68,7 @@ const MyProfile = () => {
   return (
     <>
       <div className='container'>
-        <div className='pt-5'>
+        <div className='pt-4'>
           <h3 className='text-center page-title'>THÔNG TIN CÁ NHÂN</h3>
         </div>
         <div className='py-3 center-box'>
@@ -104,15 +104,6 @@ const MyProfile = () => {
           />
           <div className='row'>
             <div className='col-md-6 col-xs-12'>
-              <FormInput
-                label='Số điện thoại'
-                name='phone'
-                control={control}
-                error={errors.phone}
-                placeholder='Nhập số điện thoại'
-              />
-            </div>
-            <div className='col-md-6 col-xs-12'>
               <FormDropdown
                 label='Giới tính'
                 name='gender'
@@ -121,10 +112,25 @@ const MyProfile = () => {
                 dropdownOptions={genderOptions}
               />
             </div>
+            <div className='col-md-6 col-xs-12'>
+              <FormInput
+                label='Số điện thoại'
+                name='phone'
+                control={control}
+                error={errors.phone}
+                placeholder='Nhập số điện thoại'
+              />
+            </div>
           </div>
+          <FormInput
+            label='Địa chỉ'
+            placeholder='Nhập địa chỉ'
+            name='address'
+            control={control}
+            error={errors.address}
+          />
           <div className='row'>
             <div className='col-md-6 col-xs-12'>
-              {' '}
               <FormInput
                 isPassword
                 label='Mật khẩu'

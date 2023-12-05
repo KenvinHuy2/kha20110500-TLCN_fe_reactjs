@@ -15,6 +15,8 @@ const AboutUs = lazy(() => import('./pages/about-us'));
 const Checkout = lazy(() => import('./pages/checkout'));
 const Register = lazy(() => import('./pages/register'));
 const MyProfile = lazy(() => import('./pages/my-profile'));
+const OrderHistory = lazy(() => import('./pages/order-history'));
+const MyPromotions = lazy(() => import('./pages/my-promotions'));
 const ClientPromotions = lazy(() => import('./pages/promotions'));
 
 // Admin pages
@@ -172,6 +174,14 @@ const App = () => {
         {
           path: 'thong-tin-ca-nhan',
           element: <LazyLoadComponent component={<MyProfile />} />,
+        },
+        {
+          path: 'lich-su-dat-hang',
+          element: <LazyLoadComponent component={<OrderHistory />} />,
+        },
+        {
+          path: 'khuyen-mai-cua-toi',
+          element: <LazyLoadComponent component={<MyPromotions />} />,
         },
       ],
     },

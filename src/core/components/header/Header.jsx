@@ -126,7 +126,7 @@ const Header = () => {
                       size='large'
                       icon={<DownOutlined />}
                       className='user-menu-btn'>
-                      Hi, {currentUser.fullName}
+                      Xin chào, {currentUser.fullName.split(' ').push()}
                     </Button>
                   </Dropdown>
                 ) : (

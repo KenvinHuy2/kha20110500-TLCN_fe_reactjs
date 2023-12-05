@@ -116,7 +116,9 @@ const AdminLayout = () => {
           <Layout.Sider className='h-100 admin-sidebar'>
             <div className='h-100 d-flex flex-column justify-content-between align-items-start'>
               <div className='d-flex flex-column justify-content-start align-items-center pt-4 pl-3'>
-                <h2 className='text-white'>LOGO</h2>
+                <NavLink to='/' className='text-center'>
+                  <h3 className='text-white pt-3'>LAKONG ADMIN</h3>
+                </NavLink>
                 <div className='pt-2'>
                   <Menu
                     theme='dark'
