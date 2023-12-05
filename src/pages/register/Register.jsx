@@ -1,17 +1,20 @@
 import { Button, Form } from 'antd';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { FormDropdown, FormInput } from '../../core/components';
 import { AlertService, AuthService } from '../../core/services';
-import { useNavigate } from 'react-router-dom';
+import { storeActions } from '../../core/store';
 
 const Register = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     handleSubmit,
     formState: { errors },
     control,
-    reset,
+    watch,
   } = useForm({
     defaultValues: {
       email: '',
@@ -25,19 +28,19 @@ const Register = () => {
   });
 
   const handleRegister = async (formValue) => {
-    if (formValue.passwordConfirm != formValue.password) {
-      AlertService.error("Mật khẩu nhập lại không trùng khớp!")
-    } else {
-      const { passwordConfirm, ...payload } = { ...formValue };
-      AuthService.register(payload).then(data => {
-        AlertService.success("Đăng ký thành công");
-        navigate('/')
-        localStorage.setItem('user', JSON.stringify(data));
-      }).catch(errors => {
-        AlertService.error(errors?.response.data.message)
-      })
+    try {
+      dispatch(storeActions.showLoading());
+      delete formValue.passwordConfirm;
+      const userDetail = await AuthService.register(formValue);
+      dispatch(storeActions.setCurrentUser(userDetail));
+      localStorage.setItem('currentUser', JSON.stringify(userDetail));
+      AlertService.success('Đăng ký tài khoản thành công');
+      return navigate('/');
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
     }
-
   };
 
   return (
@@ -62,6 +65,13 @@ const Register = () => {
               placeholder='Nhập email'
               control={control}
               error={errors.email}
+              rules={{
+                required: 'Email không được để trống',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: 'Email không hợp lệ',
+                },
+              }}
             />
             <FormInput
               isPassword
@@ -70,6 +80,13 @@ const Register = () => {
               placeholder='Nhập mật khẩu'
               control={control}
               error={errors.password}
+              rules={{
+                required: 'Mật khẩu không được để trống',
+                minLength: {
+                  value: 6,
+                  message: 'Mật khẩu phải có ít nhất 6 ký tự',
+                },
+              }}
             />
             <FormInput
               isPassword
@@ -78,6 +95,15 @@ const Register = () => {
               placeholder='Nhập lại mật khẩu'
               control={control}
               error={errors.passwordConfirm}
+              rules={{
+                required: 'Vui lòng xác nhận lại mật khẩu đã nhập',
+                validate: (value) => {
+                  if (value !== watch('password')) {
+                    return 'Mật khẩu xác nhận không khớp';
+                  }
+                  return null;
+                },
+              }}
             />
             <FormInput
               label='Họ và Tên'
@@ -85,6 +111,9 @@ const Register = () => {
               placeholder='Nhập Họ và Tên'
               control={control}
               error={errors.fullName}
+              rules={{
+                required: 'Tên người dùng không được để trống',
+              }}
             />
             <div className='row'>
               <div className='col-md-6 col-xs-12'>
@@ -99,6 +128,9 @@ const Register = () => {
                     { value: 'Nữ', label: 'Nữ' },
                     { value: 'Khác', label: 'Khác' },
                   ]}
+                  rules={{
+                    required: 'Vui lòng chọn giới tính',
+                  }}
                 />
               </div>
               <div className='col-md-6 col-xs-12'>
@@ -108,11 +140,18 @@ const Register = () => {
                   placeholder='Nhập số điện thoại'
                   control={control}
                   error={errors.phone}
+                  rules={{
+                    required: 'Số điện thoại không được để trống',
+                    pattern: {
+                      value: /^(\+84|0)(3|5|7|8|9)(\d{8})$/,
+                      message: 'Số điện thoại không hợp lệ',
+                    },
+                  }}
                 />
               </div>
             </div>
             <FormInput
-              label='Địa chỉ'
+              label='Địa chỉ (không bắt buộc)'
               name='address'
               placeholder='Nhập địa chỉ'
               control={control}
