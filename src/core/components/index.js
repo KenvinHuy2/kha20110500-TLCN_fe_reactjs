@@ -1,4 +1,4 @@
-export { default as BannerCarousel } from './banner-carousel/BannerCarousel';
+export { default as ImagesCarousel } from './images-carousel/ImagesCarousel';
 export { default as DynamicTable } from './dynamic-table/DynamicTable';
 export { default as Footer } from './footer/Footer';
 export { default as FormDatePicker } from './form-date-picker/FormDatePicker';

@@ -43,7 +43,6 @@ const ListUsers = () => {
         title: 'Điện thoại',
         dataIndex: 'phone',
         key: 'phone',
-        render: (value) => `0${value}`,
       },
       {
         title: 'Vai trò',

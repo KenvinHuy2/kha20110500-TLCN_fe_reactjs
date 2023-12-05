@@ -34,6 +34,9 @@ h6 {
 .page-title {
   font-family: 'Lora', serif !important;
   color: #0c713d;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .center-box {

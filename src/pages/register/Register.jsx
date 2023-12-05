@@ -34,6 +34,7 @@ const Register = () => {
       const userDetail = await AuthService.register(formValue);
       dispatch(storeActions.setCurrentUser(userDetail));
       localStorage.setItem('currentUser', JSON.stringify(userDetail));
+      localStorage.setItem('accessToken', userDetail.accessToken);
       AlertService.success('Đăng ký tài khoản thành công');
       return navigate('/');
     } catch (error) {

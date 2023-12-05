@@ -56,36 +56,30 @@
       border: 1px solid #0c713d;
     }
   }
+
+  .slicker-current > div {
+    height: 100% !important;
+  }
 }
 
-.modal-card {
+.product-amount {
+  .ant-input-number-input {
+    height: 50px !important;
+    text-align: center;
+  }
+}
+
+.product-desc {
+  max-height: 600px;
+  overflow: hidden auto;
+}
+
+.product-actions {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+
   display: flex;
   align-items: center;
-  padding: 30px;
-
-  .modal-thumbnail {
-    img {
-      width: 400px;
-    }
-  }
-
-  .modal-content-card {
-    width: 450px;
-    h2 {
-      font-size: 28px;
-      margin-bottom: 30px;
-      color: #0C713D;
-    }
-
-    .modal-item-card {
-      display: flex;
-      margin-bottom: 25px;
-      align-items: center;
-
-      div:first-child {
-        font-weight: 600;
-        width: 30%;
-      }
-    }
-  }
+  justify-content: space-between;
 }

@@ -156,11 +156,13 @@ const Teas = () => {
                 <ProductCard
                   key={product._id}
                   name={product.name}
+                  desc={product?.desc}
                   productId={product._id}
+                  prices={product?.prices}
+                  images={product?.images || []}
                   markers={product?.markers || []}
                   price={product?.defaultPrice?.price || 0}
-                  image={product?.defaultImage || '/assets/images/no_images.jpeg'}
-                  prices={product?.prices}
+                  defaultImage={product?.defaultImage || '/assets/images/no_images.jpeg'}
                 />
               ))
             ) : (

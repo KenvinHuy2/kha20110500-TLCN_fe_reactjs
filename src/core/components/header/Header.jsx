@@ -4,6 +4,7 @@ import {
   HistoryOutlined,
   LoginOutlined,
   LogoutOutlined,
+  SettingOutlined,
   ShoppingCartOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -119,6 +120,13 @@ const Header = () => {
                     Giỏ hàng
                   </Button>
                 </NavLink>
+                {currentUser && currentUser.isAdmin && (
+                  <NavLink to='/admin'>
+                    <Button size='large' type='dashed' icon={<SettingOutlined />}>
+                      Quản lý cửa hàng
+                    </Button>
+                  </NavLink>
+                )}
                 {currentUser ? (
                   <Dropdown menu={{ items: subMenuItem }}>
                     <Button

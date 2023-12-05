@@ -3,6 +3,7 @@ import { useRoutes } from 'react-router-dom';
 import './App.scss';
 import { LazyLoadComponent, LoadingSpinner } from './core/components';
 import { AdminLayout, ClientLayout } from './core/layouts';
+import AdminGuard from './core/guards/AdminGuard';
 
 // Client pages
 const Home = lazy(() => import('./pages/home'));

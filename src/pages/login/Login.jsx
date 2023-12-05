@@ -34,6 +34,7 @@ const Login = () => {
       const userDetail = await AuthService.login(formValue);
       dispatch(storeActions.setCurrentUser(userDetail));
       localStorage.setItem('currentUser', JSON.stringify(userDetail));
+      localStorage.setItem('accessToken', JSON.stringify(userDetail.accessToken));
       const path = userDetail.isAdmin ? '/admin' : '/';
       return navigate(path);
     } catch (error) {

@@ -170,9 +170,10 @@ const ListProducts = () => {
                 key={product._id}
                 name={product.name}
                 productId={product._id}
+                images={product.images}
                 markers={product?.markers || []}
                 price={product?.defaultPrice?.price || 0}
-                image={product?.defaultImage || '/assets/images/no_images.jpeg'}
+                defaultImage={product?.defaultImage || '/assets/images/no_images.jpeg'}
               />
             ))
           ) : (

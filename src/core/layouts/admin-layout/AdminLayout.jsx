@@ -8,10 +8,15 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './styles.scss';
+import { useDispatch } from 'react-redux';
+import { storeActions } from '../../store';
 
 const AdminLayout = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const menuItems = useMemo(() => {
     return [
       {
@@ -98,6 +103,12 @@ const AdminLayout = () => {
     setMainMenuKey(lastItem);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    dispatch(storeActions.resetCurrentUser());
+    return navigate('/');
+  };
+
   useEffect(() => {
     const pathname = location.pathname;
     if (pathname.includes('chi-tiet-nguoi-dung')) {
@@ -133,11 +144,12 @@ const AdminLayout = () => {
               </div>
               <div className='p-3 w-100'>
                 <Button
-                  icon={<LogoutOutlined />}
-                  type='primary'
                   danger
                   size='large'
-                  className='w-100'>
+                  type='primary'
+                  className='w-100'
+                  icon={<LogoutOutlined />}
+                  onClick={handleLogout}>
                   Đăng xuất
                 </Button>
               </div>
