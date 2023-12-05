@@ -9,6 +9,9 @@ import { Badge, Button, Form, InputNumber, Modal, Space } from 'antd';
 import React, { memo, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { NumericFormat } from 'react-number-format';
+import { useDispatch } from 'react-redux';
+import { AlertService } from '../../services';
+import { storeActions } from '../../store';
 import FormDropdown from '../form-dropdown/FormDropdown';
 import ImagesCarousel from '../images-carousel/ImagesCarousel';
 import './styles.scss';
@@ -39,6 +42,7 @@ const ProductCard = ({
   productId,
   defaultImage,
 }) => {
+  const dispatch = useDispatch();
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isOpenPlaceOrder, setIsOpenPlaceOrder] = useState(false);
 
@@ -55,6 +59,18 @@ const ProductCard = ({
       size: 'S',
     },
   });
+
+  const handleAddProdctToCart = async (formValue) => {
+    const productLine = {
+      productId,
+      totalPrice,
+      size: formValue.size,
+      amount: formValue.amount,
+    };
+    dispatch(storeActions.addProductToCart(productLine));
+    setIsOpenPlaceOrder(false);
+    AlertService.success(`Đã thêm ${formValue.size} sản phẩm vào giỏ hàng`);
+  };
 
   const totalPrice = useMemo(() => {
     const currentSize = getValues().size;
@@ -124,7 +140,11 @@ const ProductCard = ({
             <div className='col-7 position-relative'>
               <h4 className='page-title text-center'>{name}</h4>
               <hr />
-              <Form layout='vertical' autoComplete='false' style={{ minHeight: 300 }}>
+              <Form
+                layout='vertical'
+                autoComplete='false'
+                style={{ minHeight: 300 }}
+                onFinish={handleSubmit(handleAddProdctToCart)}>
                 <div style={{ width: 330 }}>
                   <FormDropdown
                     label='Size'
@@ -138,56 +158,58 @@ const ProductCard = ({
                   />
                 </div>
                 <div className='form-group'>
-                  <div>
-                    <label>Số lượng</label>
-                  </div>
-                  <Controller
-                    name='amount'
-                    control={control}
-                    rules={{
-                      required: 'Vui lòng nhập số lượng',
-                      validate: (value) => {
-                        if (!value || +value < 1) {
-                          return 'Số lượng phải lớn hơn 1';
-                        }
-                      },
-                    }}
-                    render={({ field }) => (
-                      <InputNumber
-                        {...field}
-                        size='large'
-                        min={1}
-                        max={100}
-                        controls={false}
-                        addonAfter={
-                          <div className='p-1'>
-                            <Button
-                              size='large'
-                              htmlType='button'
-                              type='primary'
-                              shape='circle'
-                              icon={<PlusOutlined />}
-                              onClick={() => setValue('amount', +watch('amount') + 1)}
-                            />
-                          </div>
-                        }
-                        addonBefore={
-                          <div className='p-1'>
-                            <Button
-                              danger
-                              size='large'
-                              htmlType='button'
-                              type='primary'
-                              shape='circle'
-                              icon={<MinusOutlined />}
-                              onClick={() => setValue('amount', +watch('amount') - 1)}
-                            />
-                          </div>
-                        }
-                        className='product-amount'
-                      />
-                    )}
-                  />
+                  <Form.Item
+                    label='Số lượng'
+                    validateStatus={errors && errors.amount ? 'error' : ''}
+                    help={errors && errors.amount && errors.amount.message}>
+                    <Controller
+                      name='amount'
+                      control={control}
+                      rules={{
+                        required: 'Vui lòng nhập số lượng',
+                        validate: (value) => {
+                          if (!value || +value < 1) {
+                            return 'Số lượng phải lớn hơn 0';
+                          }
+                        },
+                      }}
+                      render={({ field }) => (
+                        <InputNumber
+                          {...field}
+                          size='large'
+                          min={1}
+                          max={100}
+                          controls={false}
+                          addonAfter={
+                            <div className='p-1'>
+                              <Button
+                                size='large'
+                                htmlType='button'
+                                type='primary'
+                                shape='circle'
+                                icon={<PlusOutlined />}
+                                onClick={() => setValue('amount', +watch('amount') + 1)}
+                              />
+                            </div>
+                          }
+                          addonBefore={
+                            <div className='p-1'>
+                              <Button
+                                danger
+                                size='large'
+                                htmlType='button'
+                                type='primary'
+                                shape='circle'
+                                icon={<MinusOutlined />}
+                                onClick={() => setValue('amount', +watch('amount') - 1)}
+                              />
+                            </div>
+                          }
+                          className='product-amount'
+                        />
+                      )}
+                    />
+                  </Form.Item>
                 </div>
                 <div className='pt-4 d-flex align-items-center-justify-content-start'>
                   <h5 className='page-title text-uppercase'>
@@ -196,10 +218,15 @@ const ProductCard = ({
                   </h5>
                 </div>
                 <div className='product-actions'>
-                  <Button size='large' type='primary' icon={<ShoppingCartOutlined />}>
+                  <Button
+                    htmlType='submit'
+                    size='large'
+                    type='primary'
+                    icon={<ShoppingCartOutlined />}>
                     Thêm vào giỏ hàng
                   </Button>
                   <Button
+                    htmlType='button'
                     size='large'
                     type='dashed'
                     onClick={() => setIsOpenPlaceOrder(false)}

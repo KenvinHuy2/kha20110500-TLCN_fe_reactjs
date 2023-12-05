@@ -8,7 +8,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Button, Dropdown, Space } from 'antd';
+import { Badge, Button, Dropdown, Space } from 'antd';
 import React, { memo, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -52,6 +52,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentUser = useSelector(storeSelectors.selectCurrentUser);
+  const products = useSelector(storeSelectors.selectProducts);
 
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
@@ -116,9 +117,13 @@ const Header = () => {
             <div className='actions'>
               <Space size='small'>
                 <NavLink to='/gio-hang'>
-                  <Button size='large' icon={<ShoppingCartOutlined />} className='btn-cart'>
-                    Giỏ hàng
-                  </Button>
+                  <Badge
+                    count={products && products.length ? products.length : null}
+                    color='#0c713d'>
+                    <Button size='large' icon={<ShoppingCartOutlined />} className='btn-cart'>
+                      Giỏ hàng
+                    </Button>
+                  </Badge>
                 </NavLink>
                 {currentUser && currentUser.isAdmin && (
                   <NavLink to='/admin'>
