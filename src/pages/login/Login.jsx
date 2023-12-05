@@ -1,15 +1,19 @@
-import { KeyOutlined, LoginOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Form } from 'antd';
-import React from 'react';
+import { KeyOutlined, LoginOutlined, PlusOutlined, SendOutlined } from '@ant-design/icons';
+import { Alert, Button, Form } from 'antd';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { FormInput } from '../../core/components';
-import './styles.scss';
-import { AlertService, AuthService } from '../../core/services';
 import { useDispatch } from 'react-redux';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { FormInput, FormModal } from '../../core/components';
+import { AlertService, AuthService } from '../../core/services';
 import { storeActions } from '../../core/store';
+import ResetPassword from './reset-password/ResetPassword';
+import './styles.scss';
 
 const Login = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [forgotEmail, setForgotEmail] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -33,10 +37,53 @@ const Login = () => {
       const path = userDetail.isAdmin ? '/admin' : '/';
       return navigate(path);
     } catch (error) {
-      AlertService.error(errors?.response?.data?.message || error.message);
+      AlertService.error(error?.response?.data?.message || error.message);
     } finally {
       dispatch(storeActions.hideLoading());
     }
+  };
+
+  const handleForgotPassword = async () => {
+    try {
+      const { value: email } = await AlertService.alertWithEmailInput();
+      if (!email) {
+        return;
+      }
+      dispatch(storeActions.showLoading());
+      await AuthService.forgotPassword(email);
+      setForgotEmail(email);
+      setIsOpen(true);
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
+  };
+
+  const cancelForgotPassword = () => {
+    setIsOpen(false);
+    setForgotEmail(null);
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      dispatch(storeActions.showLoading());
+      setIsVisible(false);
+      await AuthService.resendOtp(forgotEmail);
+      setIsVisible(true);
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
+  };
+
+  const handleFinishForgotPassword = () => {
+    setIsOpen(false);
+    setForgotEmail(null);
+    AlertService.success(
+      'Khôi phục mật khẩu thành công. Mật khẩu mới đã được chúng tôi gửi tới email của bạn.',
+    );
   };
 
   return (
@@ -72,7 +119,7 @@ const Login = () => {
             />
             <div className='form-group'>
               <div className='d-flex align-items-center justify-content-between'>
-                <Button type='text' icon={<KeyOutlined />}>
+                <Button type='text' icon={<KeyOutlined />} onClick={handleForgotPassword}>
                   Quên mật khẩu?
                 </Button>
                 <NavLink to='/dang-ky'>
@@ -95,6 +142,34 @@ const Login = () => {
           </Form>
         </div>
       </div>
+      <FormModal
+        isOpen={isOpen}
+        cancelBtnText='Huỷ'
+        title='Khôi phục mật khẩu'
+        isUseDefaultFooter={false}
+        onCancel={cancelForgotPassword}>
+        {isVisible && (
+          <div className='pb-3'>
+            <Alert
+              message='Chúng tôi đã gửi một mã OTP đến email đã của bạn'
+              type='success'
+              showIcon
+              closable
+              afterClose={() => setIsVisible(false)}
+            />
+          </div>
+        )}
+        <div className='pb-3 text-center'>
+          <Button icon={<SendOutlined />} onClick={handleResendOtp}>
+            Gửi lai OTP
+          </Button>
+        </div>
+        <ResetPassword
+          forgotEmail={forgotEmail}
+          onFinish={handleFinishForgotPassword}
+          onCancel={cancelForgotPassword}
+        />
+      </FormModal>
     </>
   );
 };

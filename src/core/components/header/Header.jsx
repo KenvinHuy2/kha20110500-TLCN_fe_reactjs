@@ -114,6 +114,11 @@ const Header = () => {
             </div>
             <div className='actions'>
               <Space size='small'>
+                <NavLink to='/gio-hang'>
+                  <Button size='large' icon={<ShoppingCartOutlined />} className='btn-cart'>
+                    Giỏ hàng
+                  </Button>
+                </NavLink>
                 {currentUser ? (
                   <Dropdown menu={{ items: subMenuItem }}>
                     <Button
@@ -131,11 +136,6 @@ const Header = () => {
                     </Button>
                   </NavLink>
                 )}
-                <NavLink to='/gio-hang'>
-                  <Button size='large' icon={<ShoppingCartOutlined />} className='btn-cart'>
-                    Giỏ hàng
-                  </Button>
-                </NavLink>
               </Space>
             </div>
           </div>

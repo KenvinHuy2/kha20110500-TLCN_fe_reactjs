@@ -33,4 +33,22 @@ export const AlertService = {
       confirmButtonText: 'Xoá',
     });
   },
+  alertWithEmailInput: () => {
+    return Swal.fire({
+      title: 'Khôi Phục Lại Mật Khẩu',
+      input: 'email',
+      inputLabel: 'Email',
+      inputPlaceholder: 'Nhập địa chỉ email đã đăng ký',
+      inputValidator: (value) => {
+        if (!value.trim()) {
+          return 'Email không được để trống';
+        }
+        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+          return 'Email không hợp lệ';
+        }
+      },
+      showCancelButton: true,
+      cancelButtonText: 'Huỷ',
+    });
+  },
 };

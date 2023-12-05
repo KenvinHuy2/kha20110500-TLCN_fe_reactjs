@@ -10,6 +10,7 @@ const FormModal = ({
   cancelBtnText,
   onCancel = () => {},
   onSubmit = () => {},
+  isUseDefaultFooter = true,
 }) => {
   return (
     <>
@@ -22,15 +23,19 @@ const FormModal = ({
         width={width || 520}>
         <hr />
         {children}
-        <hr />
-        <div className='d-flex justify-content-between align-items-center'>
-          <Button htmlType='button' onClick={onCancel} size='large'>
-            {cancelBtnText || 'Cancel'}
-          </Button>
-          <Button size='large' type='primary' htmlType='submit' onClick={onSubmit}>
-            {okBtnText || 'Ok'}
-          </Button>
-        </div>
+        {isUseDefaultFooter && (
+          <>
+            <hr />
+            <div className='d-flex justify-content-between align-items-center'>
+              <Button htmlType='button' onClick={onCancel} size='large'>
+                {cancelBtnText || 'Cancel'}
+              </Button>
+              <Button size='large' type='primary' htmlType='submit' onClick={onSubmit}>
+                {okBtnText || 'Ok'}
+              </Button>
+            </div>
+          </>
+        )}
       </Modal>
     </>
   );
