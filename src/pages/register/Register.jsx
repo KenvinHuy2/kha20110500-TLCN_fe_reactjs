@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FormDropdown, FormInput } from '../../core/components';
-import { AlertService, AuthService } from '../../core/services';
+import { AlertService, AuthService, CartsService } from '../../core/services';
 import { storeActions } from '../../core/store';
 
 const Register = () => {
@@ -32,6 +32,8 @@ const Register = () => {
       dispatch(storeActions.showLoading());
       delete formValue.passwordConfirm;
       const userDetail = await AuthService.register(formValue);
+      const cart = await CartsService.getCart(userDetail._id);
+      console.log(cart);
       dispatch(storeActions.setCurrentUser(userDetail));
       localStorage.setItem('currentUser', JSON.stringify(userDetail));
       localStorage.setItem('accessToken', userDetail.accessToken);

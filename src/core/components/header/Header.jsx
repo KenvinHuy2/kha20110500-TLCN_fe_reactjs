@@ -56,6 +56,7 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
+    dispatch(storeActions.resetCart());
     dispatch(storeActions.resetCurrentUser());
     return navigate('/');
   };
@@ -139,7 +140,7 @@ const Header = () => {
                       size='large'
                       icon={<DownOutlined />}
                       className='user-menu-btn'>
-                      Xin chào, {currentUser.fullName.split(' ').push()}
+                      Xin chào, {currentUser.fullName.split(' ').pop()}
                     </Button>
                   </Dropdown>
                 ) : (

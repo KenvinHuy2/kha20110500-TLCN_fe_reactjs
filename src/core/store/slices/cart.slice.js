@@ -18,6 +18,9 @@ const cartSlice = createSlice({
         state.products.push(payload);
       }
     },
+    resetCart: (state) => {
+      state.products = [];
+    },
   },
 });
 

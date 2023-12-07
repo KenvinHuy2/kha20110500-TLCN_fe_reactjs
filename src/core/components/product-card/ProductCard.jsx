@@ -18,15 +18,15 @@ import './styles.scss';
 
 const sizeOptions = [
   {
-    label: 'S',
+    label: 'S - Nhỏ',
     value: 'S',
   },
   {
-    label: 'M',
+    label: 'M - Vừa',
     value: 'M',
   },
   {
-    label: 'L',
+    label: 'L - Lớn',
     value: 'L',
   },
 ];
@@ -66,16 +66,17 @@ const ProductCard = ({
       totalPrice,
       size: formValue.size,
       amount: formValue.amount,
+      image: defaultImage,
     };
     dispatch(storeActions.addProductToCart(productLine));
     setIsOpenPlaceOrder(false);
-    AlertService.success(`Đã thêm ${formValue.size} sản phẩm vào giỏ hàng`);
+    AlertService.success(`Đã thêm sản phẩm vào giỏ hàng`);
   };
 
   const totalPrice = useMemo(() => {
     const currentSize = getValues().size;
     const currentAmount = getValues().amount;
-    const pricePerSize = prices.find((item) => item.size === currentSize);
+    const pricePerSize = prices && prices.find((item) => item.size === currentSize);
 
     if (pricePerSize && currentAmount >= 0) {
       return currentAmount * pricePerSize.price;

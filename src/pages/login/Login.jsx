@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { FormInput, FormModal } from '../../core/components';
-import { AlertService, AuthService } from '../../core/services';
+import { AlertService, AuthService, CartsService } from '../../core/services';
 import { storeActions } from '../../core/store';
 import ResetPassword from './reset-password/ResetPassword';
 import './styles.scss';
@@ -32,6 +32,8 @@ const Login = () => {
     try {
       dispatch(storeActions.showLoading());
       const userDetail = await AuthService.login(formValue);
+      // const cart = await CartsService.getCart(userDetail._id);
+      // console.log(cart);
       dispatch(storeActions.setCurrentUser(userDetail));
       localStorage.setItem('currentUser', JSON.stringify(userDetail));
       localStorage.setItem('accessToken', JSON.stringify(userDetail.accessToken));

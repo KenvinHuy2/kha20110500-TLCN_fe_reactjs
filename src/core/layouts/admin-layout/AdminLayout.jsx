@@ -106,6 +106,7 @@ const AdminLayout = () => {
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
     dispatch(storeActions.resetCurrentUser());
+    dispatch(storeActions.resetCart());
     return navigate('/');
   };
 

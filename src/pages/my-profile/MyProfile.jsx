@@ -1,11 +1,12 @@
 import { UploadOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Form } from 'antd';
-import React from 'react';
+import { Avatar, Button, Form, Upload } from 'antd';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormDropdown, FormInput } from '../../core/components';
-import { AlertService } from '../../core/services';
+import { AlertService, UsersService } from '../../core/services';
 import { storeActions, storeSelectors } from '../../core/store';
+import { renameFile } from '../../core/utils';
 
 const roleOptions = [
   {
@@ -34,6 +35,8 @@ const genderOptions = [
 ];
 
 const MyProfile = () => {
+  const [avatar, setAvatar] = useState(null);
+  const [avatarUrl, setAvatarUrl] = useState(null);
   const currentUser = useSelector(storeSelectors.selectCurrentUser);
   const {
     handleSubmit,
@@ -54,10 +57,51 @@ const MyProfile = () => {
   });
   const dispatch = useDispatch();
 
-  const handleUpdateUser = async (formData) => {
+  const beforeUpload = (file) => {
+    const isImage = file.type.startsWith('image/');
+    if (!isImage) {
+      AlertService.warn('Chi cho phép upload hình ảnh');
+    }
+    return false;
+  };
+
+  const revokeUrl = () => {
+    if (avatarUrl) {
+      console.log('run revoke');
+      URL.revokeObjectURL(avatarUrl);
+    }
+    setAvatarUrl(null);
+  };
+
+  const handleUploadFile = ({ file }) => {
+    revokeUrl();
+    const imageUrl = URL.createObjectURL(file);
+    setAvatar(file);
+    setAvatarUrl(imageUrl);
+  };
+
+  const handleUpdateUser = async (formValue) => {
     try {
-      console.log(formData);
+      const formData = new FormData();
+      ['email', 'passwordConfirm'].forEach((field) => {
+        delete formValue[field];
+      });
+      for (const field of Object.keys(formValue)) {
+        if (formValue[field]) {
+          formData.append(field, formValue[field]);
+        }
+      }
+      if (avatar) {
+        formData.append('avatar', avatar);
+      }
       dispatch(storeActions.showLoading());
+      const user = await UsersService.updateUser(currentUser._id, formData);
+      dispatch(storeActions.setCurrentUser(user));
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      if (avatar) {
+        revokeUrl();
+      }
+      AlertService.success('Cập nhật thành công');
     } catch (error) {
       AlertService.error(error?.response?.data?.message || error.message);
     } finally {
@@ -75,11 +119,18 @@ const MyProfile = () => {
           <img src='/assets/images/divider.png' alt='divider' />
         </div>
         <div className='text-center py-2'>
-          <Avatar src={currentUser?.avatar} size={120} icon={<UserOutlined />} />
+          <Avatar src={avatarUrl || currentUser?.avatar} size={120} icon={<UserOutlined />} />
           <div className='pt-3'>
-            <Button size='large' icon={<UploadOutlined />}>
-              Tải ảnh lên
-            </Button>
+            <Upload
+              name='avatar'
+              onRemove={revokeUrl}
+              beforeUpload={beforeUpload}
+              onChange={handleUploadFile}
+              showUploadList={false}>
+              <Button size='large' icon={<UploadOutlined />}>
+                Tải ảnh lên
+              </Button>
+            </Upload>
           </div>
         </div>
         <Form
@@ -119,6 +170,12 @@ const MyProfile = () => {
                 control={control}
                 error={errors.phone}
                 placeholder='Nhập số điện thoại'
+                rules={{
+                  pattern: {
+                    value: /^(\+84|0)(3|5|7|8|9)(\d{8})$/,
+                    message: 'Số điện thoại không hợp lệ',
+                  },
+                }}
               />
             </div>
           </div>

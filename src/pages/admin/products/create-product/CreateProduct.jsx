@@ -226,14 +226,12 @@ const CreateProduct = () => {
                 beforeUpload={(file) => {
                   if (!file.type.startsWith('image/')) {
                     AlertService.error('Chi cho phép tải lên hình ảnh');
-                    return false;
                   }
                   if (file.size > 1024 * 1024 * 10) {
                     AlertService.error('Kích thước file tối đa là 10MB');
-                    return false;
                   }
 
-                  return true;
+                  return false;
                 }}>
                 <Button htmlType='button' icon={<UploadOutlined />} size='large'>
                   Tải ảnh lên

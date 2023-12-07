@@ -3,7 +3,7 @@ import { useRoutes } from 'react-router-dom';
 import './App.scss';
 import { LazyLoadComponent, LoadingSpinner } from './core/components';
 import { AdminLayout, ClientLayout } from './core/layouts';
-import AdminGuard from './core/guards/AdminGuard';
+import { AuthGuard, NonAuthGuard } from './core/guards';
 
 // Client pages
 const Home = lazy(() => import('./pages/home'));
@@ -19,6 +19,7 @@ const MyProfile = lazy(() => import('./pages/my-profile'));
 const OrderHistory = lazy(() => import('./pages/order-history'));
 const MyPromotions = lazy(() => import('./pages/my-promotions'));
 const ClientPromotions = lazy(() => import('./pages/promotions'));
+const PageNotFound = lazy(() => import('./pages/page-not-found'));
 
 // Admin pages
 const Dashboard = lazy(() => import('./pages/admin/dashboard'));
@@ -52,7 +53,11 @@ const App = () => {
   const routes = useRoutes([
     {
       path: '/admin',
-      element: <AdminLayout />,
+      element: (
+        <AuthGuard isAdmin>
+          <AdminLayout />
+        </AuthGuard>
+      ),
       children: [
         {
           index: true,
@@ -158,11 +163,19 @@ const App = () => {
         },
         {
           path: 'dang-nhap',
-          element: <LazyLoadComponent component={<Login />} />,
+          element: (
+            <NonAuthGuard>
+              <LazyLoadComponent component={<Login />} />
+            </NonAuthGuard>
+          ),
         },
         {
           path: 'dang-ky',
-          element: <LazyLoadComponent component={<Register />} />,
+          element: (
+            <NonAuthGuard>
+              <LazyLoadComponent component={<Register />} />
+            </NonAuthGuard>
+          ),
         },
         {
           path: 'gio-hang',
@@ -183,6 +196,10 @@ const App = () => {
         {
           path: 'khuyen-mai-cua-toi',
           element: <LazyLoadComponent component={<MyPromotions />} />,
+        },
+        {
+          path: '*',
+          element: <LazyLoadComponent component={<PageNotFound />} />,
         },
       ],
     },
