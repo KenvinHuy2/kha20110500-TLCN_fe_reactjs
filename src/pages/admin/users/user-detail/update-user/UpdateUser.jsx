@@ -114,11 +114,7 @@ const UpdateUser = ({ user }) => {
         <div className='text-center py-2'>
           <Avatar src={user?.avatar} size={120} icon={<UserOutlined />} />
         </div>
-        <Form
-          name='create-user-form'
-          layout='vertical'
-          autoComplete='false'
-          onFinish={handleSubmit(handleUpdateUser)}>
+        <Form name='create-user-form' layout='vertical' onFinish={handleSubmit(handleUpdateUser)}>
           <FormInput
             label='Email'
             name='email'

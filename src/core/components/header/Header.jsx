@@ -4,6 +4,7 @@ import {
   HistoryOutlined,
   LoginOutlined,
   LogoutOutlined,
+  PlusOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
   UserOutlined,
@@ -117,38 +118,47 @@ const Header = () => {
             </div>
             <div className='actions'>
               <Space size='small'>
-                <NavLink to='/gio-hang'>
-                  <Badge
-                    count={products && products.length ? products.length : null}
-                    color='#0c713d'>
-                    <Button size='large' icon={<ShoppingCartOutlined />} className='btn-cart'>
-                      Giỏ hàng
-                    </Button>
-                  </Badge>
-                </NavLink>
-                {currentUser && currentUser.isAdmin && (
-                  <NavLink to='/admin'>
-                    <Button size='large' type='dashed' icon={<SettingOutlined />}>
-                      Quản lý cửa hàng
-                    </Button>
-                  </NavLink>
-                )}
                 {currentUser ? (
-                  <Dropdown menu={{ items: subMenuItem }}>
-                    <Button
-                      type='text'
-                      size='large'
-                      icon={<DownOutlined />}
-                      className='user-menu-btn'>
-                      Xin chào, {currentUser.fullName.split(' ').pop()}
-                    </Button>
-                  </Dropdown>
+                  <>
+                    <NavLink to='/gio-hang'>
+                      <Badge
+                        count={products && products.length ? products.length : null}
+                        color='#0c713d'>
+                        <Button size='large' icon={<ShoppingCartOutlined />} className='btn-cart'>
+                          Giỏ hàng
+                        </Button>
+                      </Badge>
+                    </NavLink>
+                    {currentUser.isAdmin && (
+                      <NavLink to='/admin'>
+                        <Button size='large' type='dashed' icon={<SettingOutlined />}>
+                          Quản lý cửa hàng
+                        </Button>
+                      </NavLink>
+                    )}
+                    <Dropdown menu={{ items: subMenuItem }}>
+                      <Button
+                        type='text'
+                        size='large'
+                        icon={<DownOutlined />}
+                        className='user-menu-btn'>
+                        Xin chào, {currentUser.fullName.split(' ').pop()}
+                      </Button>
+                    </Dropdown>
+                  </>
                 ) : (
-                  <NavLink to='/dang-nhap'>
-                    <Button type='text' size='large' icon={<LoginOutlined />}>
-                      Đăng nhập
-                    </Button>
-                  </NavLink>
+                  <Space>
+                    <NavLink to='/dang-nhap'>
+                      <Button type='text' size='large' icon={<LoginOutlined />}>
+                        Đăng nhập
+                      </Button>
+                    </NavLink>
+                    <NavLink to='/dang-ky'>
+                      <Button size='large' icon={<PlusOutlined />} className='btn-cart'>
+                        Đăng ký tài khoản
+                      </Button>
+                    </NavLink>
+                  </Space>
                 )}
               </Space>
             </div>

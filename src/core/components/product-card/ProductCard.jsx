@@ -9,9 +9,6 @@ import { Badge, Button, Form, InputNumber, Modal, Space } from 'antd';
 import React, { memo, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { NumericFormat } from 'react-number-format';
-import { useDispatch } from 'react-redux';
-import { AlertService } from '../../services';
-import { storeActions } from '../../store';
 import FormDropdown from '../form-dropdown/FormDropdown';
 import ImagesCarousel from '../images-carousel/ImagesCarousel';
 import './styles.scss';
@@ -40,9 +37,9 @@ const ProductCard = ({
   isAdmin,
   markers,
   productId,
+  onAddToCart,
   defaultImage,
 }) => {
-  const dispatch = useDispatch();
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isOpenPlaceOrder, setIsOpenPlaceOrder] = useState(false);
 
@@ -60,17 +57,17 @@ const ProductCard = ({
     },
   });
 
-  const handleAddProdctToCart = async (formValue) => {
+  const handleAddProductToCart = async (formValue) => {
     const productLine = {
       productId,
-      totalPrice,
       size: formValue.size,
       amount: formValue.amount,
       image: defaultImage,
     };
-    dispatch(storeActions.addProductToCart(productLine));
+    if (onAddToCart && onAddToCart instanceof Function) {
+      onAddToCart(productLine);
+    }
     setIsOpenPlaceOrder(false);
-    AlertService.success(`Đã thêm sản phẩm vào giỏ hàng`);
   };
 
   const totalPrice = useMemo(() => {
@@ -145,7 +142,7 @@ const ProductCard = ({
                 layout='vertical'
                 autoComplete='false'
                 style={{ minHeight: 300 }}
-                onFinish={handleSubmit(handleAddProdctToCart)}>
+                onFinish={handleSubmit(handleAddProductToCart)}>
                 <div style={{ width: 330 }}>
                   <FormDropdown
                     label='Size'

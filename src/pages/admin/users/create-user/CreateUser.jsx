@@ -69,11 +69,7 @@ const CreateUser = () => {
   return (
     <>
       <div className='container w-75'>
-        <Form
-          name='create-user-form'
-          layout='vertical'
-          autoComplete='false'
-          onFinish={handleSubmit(handleCreateUser)}>
+        <Form name='create-user-form' layout='vertical' onFinish={handleSubmit(handleCreateUser)}>
           <FormInput
             label='Email'
             name='email'

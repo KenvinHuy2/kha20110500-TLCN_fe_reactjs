@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FormDropdown, FormInput } from '../../core/components';
-import { AlertService, AuthService, CartsService } from '../../core/services';
+import { AlertService, AuthService } from '../../core/services';
 import { storeActions } from '../../core/store';
 
 const Register = () => {
@@ -32,9 +32,8 @@ const Register = () => {
       dispatch(storeActions.showLoading());
       delete formValue.passwordConfirm;
       const userDetail = await AuthService.register(formValue);
-      const cart = await CartsService.getCart(userDetail._id);
-      console.log(cart);
       dispatch(storeActions.setCurrentUser(userDetail));
+      dispatch(storeActions.getCartByUserId(userDetail._id));
       localStorage.setItem('currentUser', JSON.stringify(userDetail));
       localStorage.setItem('accessToken', userDetail.accessToken);
       AlertService.success('Đăng ký tài khoản thành công');
@@ -59,7 +58,6 @@ const Register = () => {
           <Form
             name='register-form'
             layout='vertical'
-            autoComplete='false'
             className='w-50'
             onFinish={handleSubmit(handleRegister)}>
             <FormInput

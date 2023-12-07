@@ -1,7 +1,7 @@
 import React from 'react';
-import './styles.scss';
-import { Footer, Header } from '../../components';
 import { Outlet } from 'react-router-dom';
+import { Footer, Header } from '../../components';
+import './styles.scss';
 
 const ClientLayout = () => {
   return (

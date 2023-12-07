@@ -6,18 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FormDropdown, FormInput } from '../../core/components';
 import { AlertService, UsersService } from '../../core/services';
 import { storeActions, storeSelectors } from '../../core/store';
-import { renameFile } from '../../core/utils';
-
-const roleOptions = [
-  {
-    label: 'Quản trị viên',
-    value: true,
-  },
-  {
-    label: 'Khách hàng',
-    value: false,
-  },
-];
 
 const genderOptions = [
   {
@@ -43,7 +31,6 @@ const MyProfile = () => {
     control,
     formState: { errors },
     watch,
-    reset,
   } = useForm({
     defaultValues: {
       email: currentUser.email || null,
@@ -133,11 +120,7 @@ const MyProfile = () => {
             </Upload>
           </div>
         </div>
-        <Form
-          name='my-profile-form'
-          layout='vertical'
-          autoComplete='false'
-          onFinish={handleSubmit(handleUpdateUser)}>
+        <Form name='my-profile-form' layout='vertical' onFinish={handleSubmit(handleUpdateUser)}>
           <FormInput
             isDisabled
             label='Email'

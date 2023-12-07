@@ -1,4 +1,5 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
+import * as asyncActions from './../async-actions';
 
 const initialState = {
   products: [],
@@ -8,19 +9,17 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addProductToCart: (state, { payload }) => {
-      const existedProduct = state.products.find(
-        (item) => item.productId === payload.productId && item.size === payload.size,
-      );
-      if (existedProduct) {
-        existedProduct.amount += payload.amount;
-      } else {
-        state.products.push(payload);
-      }
-    },
     resetCart: (state) => {
       state.products = [];
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(asyncActions.getCartByUserId.fulfilled, (state, { payload }) => {
+      state.products = payload.products;
+    });
+    builder.addCase(asyncActions.addProductToCart.fulfilled, (state, { payload }) => {
+      state.products = payload.products;
+    });
   },
 });
 

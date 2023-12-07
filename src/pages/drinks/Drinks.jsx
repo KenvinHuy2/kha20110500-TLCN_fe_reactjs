@@ -2,7 +2,7 @@ import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Empty, Form, Pagination } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FormDropdown, FormInput, ProductCard } from '../../core/components';
 import {
   AlertService,
@@ -10,7 +10,7 @@ import {
   ProductTypesService,
   ProductsService,
 } from '../../core/services';
-import { storeActions } from '../../core/store';
+import { storeActions, storeSelectors } from '../../core/store';
 import './styles.scss';
 
 const Drinks = () => {
@@ -26,6 +26,7 @@ const Drinks = () => {
   const [pagination, setPagination] = useState({});
 
   const dispatch = useDispatch();
+  const currentUser = useSelector(storeSelectors.selectCurrentUser);
   const {
     handleSubmit,
     control,
@@ -77,6 +78,19 @@ const Drinks = () => {
     } finally {
       dispatch(storeActions.hideLoading());
     }
+  };
+
+  const handleAddProductToCart = (product) => {
+    if (!currentUser) {
+      return AlertService.warn('Vui lòng đăng nhập để thực hiện thao tác này');
+    }
+    dispatch(
+      storeActions.addProductToCart({
+        userId: currentUser._id,
+        products: [product],
+      }),
+    );
+    AlertService.success('Thêm vào giỏ hàng thành công');
   };
 
   useEffect(() => {
@@ -183,6 +197,7 @@ const Drinks = () => {
                   prices={product?.prices || []}
                   images={product?.images || []}
                   markers={product?.markers || []}
+                  onAddToCart={handleAddProductToCart}
                   price={product?.defaultPrice?.price || 0}
                   defaultImage={product?.defaultImage || '/assets/images/no_images.jpeg'}
                 />

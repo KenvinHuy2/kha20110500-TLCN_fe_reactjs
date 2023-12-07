@@ -17,7 +17,7 @@ const ListUsers = () => {
         title: 'ID',
         dataIndex: '_id',
         key: '_id',
-        render: (value) => value.slice(-7, -1),
+        render: (value) => value.slice(-8, -1),
         align: 'center',
       },
       {

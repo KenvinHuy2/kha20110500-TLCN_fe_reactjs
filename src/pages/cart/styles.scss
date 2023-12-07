@@ -39,3 +39,17 @@
 .list-products {
   list-style-type: none;
 }
+
+.list-product-item {
+  transition: all 0.3s ease;
+  padding: 24px 16px;
+  img {
+    width: 120px !important;
+    height: 120px !important;
+    object-fit: contain;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+  }
+}

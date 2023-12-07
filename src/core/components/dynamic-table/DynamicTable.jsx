@@ -48,7 +48,7 @@ const DynamicTable = ({
           rowKey={rowKey}
           columns={cols}
           dataSource={filteredData}
-          pagination={{ position: ['bottomRight'], pageSize }}
+          pagination={{ position: ['bottomRight'], pageSize, hideOnSinglePage: true }}
           bordered={hasBorder}
         />
       </div>

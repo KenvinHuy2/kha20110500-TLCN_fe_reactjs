@@ -1,6 +1,7 @@
 import { Button } from 'antd';
 import React from 'react';
 import './styles.scss';
+import { NavLink } from 'react-router-dom';
 
 const Home = () => {
   return (
@@ -22,7 +23,9 @@ const Home = () => {
               trung thực và tin yêu sẽ góp phần mang đến những nét đẹp trong văn hóa thưởng trà và
               cà phê ngày càng bay cao, vươn xa.
             </p>
-            <Button size='large'>Xem thêm</Button>
+            <NavLink to='/thuc-uong'>
+              <Button size='large'>Xem thêm</Button>
+            </NavLink>
           </div>
         </div>
         <div className='container home-intro'>
@@ -35,7 +38,9 @@ const Home = () => {
               cho trà và cà phê với mong muốn được thử thách bản thân trong ngành dịch vụ năng động
               và sáng tạo.
             </p>
-            <Button size='large'>Xem thêm</Button>
+            <NavLink to='/thuc-uong'>
+              <Button size='large'>Xem thêm</Button>
+            </NavLink>
           </div>
         </div>
       </div>
