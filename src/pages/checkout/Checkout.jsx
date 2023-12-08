@@ -51,7 +51,7 @@ const getDeliveryStatus = (deliveryType) => {
   if (deliveryType === DeliveryOptions.DELIVERY) {
     return 'đang giao hàng';
   }
-  return 'đã giao';
+  return 'đã giao hàng';
 };
 
 const getPaymentStatus = (paymentMethod) => {
@@ -75,11 +75,11 @@ const getDeliveryAddress = (deliveryType, formAddress, userAddress) => {
   return formAddress.trim() || userAddress.trim();
 };
 
-const getPhone = (deliveryType, formPhone, userPhone) => {
+const getOrderStatus = (deliveryType) => {
   if (deliveryType === DeliveryOptions.PICKUP) {
-    return '0389686410';
+    return 'hoàn tất';
   }
-  return formPhone.trim() || userPhone.trim();
+  return 'đang xử lý';
 };
 
 const Checkout = () => {
@@ -121,7 +121,7 @@ const Checkout = () => {
       formValues.deliveryAddress,
       currentUser.address,
     );
-    const phone = getPhone(formValues.deliveryType, formValues.phone, currentUser.phone);
+    const orderStatus = getOrderStatus();
 
     const payload = {
       userId: currentUser._id,
@@ -129,17 +129,18 @@ const Checkout = () => {
       paymentStatus,
       deliveryType: formValues.deliveryType,
       deliveryStatus,
-      orderStatus: 'đang xử lý',
+      orderStatus,
       products: orderProducts,
       totalBill,
       notes: formValues.notes,
       fullName: formValues.fullName.trim() || currentUser.fullName.trim(),
-      phone,
+      phone: formValues.phone || currentUser.phone,
       deliveryAddress,
     };
     try {
       dispatch(storeActions.showLoading());
       const order = await OrdersService.createOrder(payload);
+      dispatch(storeActions.resetCart());
       AlertService.success(`Đặt hàng thành công. ID đơn hàng: ${order.orderId}`);
       return navigate('/lich-su-dat-hang');
     } catch (error) {

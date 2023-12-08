@@ -10,4 +10,16 @@ export const OrdersService = {
     const { data } = await axiosClient.post('/api/orders', payload);
     return data.responseData;
   },
+
+  getOrdersByUserId: async (userId) => {
+    const { data } = await axiosClient.get(`/api/orders/users/${userId}`);
+    return data.responseData;
+  },
+
+  getOrders: async (filterOptions) => {
+    const { data } = await axiosClient.get('/api/orders', {
+      params: filterOptions,
+    });
+    return data.responseData;
+  },
 };
