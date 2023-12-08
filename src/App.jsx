@@ -182,7 +182,7 @@ const App = () => {
           element: <LazyLoadComponent component={<Cart />} />,
         },
         {
-          path: 'thanh-toan',
+          path: 'thanh-toan-don-hang',
           element: <LazyLoadComponent component={<Checkout />} />,
         },
         {

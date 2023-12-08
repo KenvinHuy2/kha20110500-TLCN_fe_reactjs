@@ -1,8 +1,9 @@
 import { DeleteOutlined, DollarOutlined } from '@ant-design/icons';
 import { Button, Empty, Image, InputNumber, Select } from 'antd';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import { DynamicTable } from '../../core/components';
 import { storeActions, storeSelectors } from '../../core/store';
 import './styles.scss';
@@ -27,18 +28,18 @@ const Cart = () => {
   const products = useSelector(storeSelectors.selectProducts);
   const currentUser = useSelector(storeSelectors.selectCurrentUser);
 
-  const handleChangeProductSize = (newSize, currentProduct) => {
+  const handleChangeProductSize = (changeSize, product) => {
     const oldProduct = {
       amount: 0,
-      size: currentProduct.size,
-      image: currentProduct.image,
-      productId: currentProduct.productId,
+      size: product.size,
+      image: product.image,
+      productId: product.productId,
     };
     const newProduct = {
-      size: newSize,
-      image: currentProduct.image,
-      amount: currentProduct.amount,
-      productId: currentProduct.productId,
+      size: changeSize,
+      image: product.image,
+      amount: product.amount,
+      productId: product.productId,
     };
     dispatch(
       storeActions.addProductToCart({
@@ -48,21 +49,25 @@ const Cart = () => {
     );
   };
 
-  const handleRemoveProduct = (currentProduct) => {
+  const handleRemoveProduct = (product) => {
     dispatch(
       storeActions.addProductToCart({
         userId: currentUser._id,
         products: [
           {
             amount: 0,
-            size: currentProduct.size,
-            image: currentProduct.image,
-            productId: currentProduct.productId,
+            size: product.size,
+            image: product.image,
+            productId: product.productId,
           },
         ],
       }),
     );
   };
+
+  useEffect(() => {
+    dispatch(storeActions.getCartByUserId(currentUser._id));
+  }, []);
 
   const tableColumns = useMemo(() => {
     return [
@@ -94,9 +99,10 @@ const Cart = () => {
         align: 'center',
         render: (value, product) => (
           <Select
+            size='large'
             options={sizeOptions}
             value={value}
-            onChange={(size) => handleChangeProductSize(size, product)}
+            onChange={(changeSize) => handleChangeProductSize(changeSize, product)}
           />
         ),
       },
@@ -105,7 +111,9 @@ const Cart = () => {
         dataIndex: 'amount',
         key: 'amount',
         align: 'center',
-        render: (value) => <InputNumber min={1} value={value} />,
+        render: (value, product) => (
+          <InputNumber size='large' min={0} defaultValue={value} value={value} />
+        ),
       },
       {
         title: 'Đơn giá',
@@ -159,6 +167,7 @@ const Cart = () => {
               <div className='container-fluid px-5'>
                 <DynamicTable
                   hasBorder
+                  rowKey='_id'
                   cols={tableColumns}
                   dataSrc={products}
                   pageSize={Number.MAX_SAFE_INTEGER}
@@ -183,9 +192,11 @@ const Cart = () => {
               style={{ color: '#0c713d' }}
             />
           </h3>
-          <Button size='large' type='primary' icon={<DollarOutlined />} disabled={!totalPrice}>
-            Thanh toán
-          </Button>
+          <NavLink to='/thanh-toan-don-hang'>
+            <Button size='large' type='primary' icon={<DollarOutlined />} disabled={!totalPrice}>
+              Thanh toán
+            </Button>
+          </NavLink>
         </div>
       </div>
     </>

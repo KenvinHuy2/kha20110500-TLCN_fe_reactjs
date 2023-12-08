@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { sharedActions } from '../slices/shared.slice';
-import { AlertService, CartsService } from '../../services';
+import { AlertService, CartsService, OrdersService } from '../../services';
 
 export const getCartByUserId = createAsyncThunk(
   'cart/getCartByUserId',
@@ -10,7 +10,7 @@ export const getCartByUserId = createAsyncThunk(
       const cart = await CartsService.getCartByUserId(userId);
       return cart;
     } catch (error) {
-      AlertService.error(error?.response?.data?.error || error.message);
+      AlertService.error(error?.response?.data?.message || error.message);
       return Promise.reject(null);
     } finally {
       dispatch(sharedActions.hideLoading());

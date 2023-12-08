@@ -12,6 +12,13 @@ const cartSlice = createSlice({
     resetCart: (state) => {
       state.products = [];
     },
+    updateProductAmount: (state, { payload }) => {
+      let productLine = state.products.find((item) => item._id === payload.lineId);
+      if (productLine) {
+        productLine.amount = payload.amount;
+        productLine.totalPrice = payload.amount * productLine.price;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(asyncActions.getCartByUserId.fulfilled, (state, { payload }) => {
