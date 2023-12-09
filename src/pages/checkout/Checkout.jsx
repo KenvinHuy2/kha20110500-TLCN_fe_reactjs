@@ -332,6 +332,7 @@ const Checkout = () => {
                     placeholder='Thêm ghi chú (nếu có)'
                     {...field}
                     onResize={() => {}}
+                    autoSize={false}
                   />
                 )}
               />
