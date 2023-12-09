@@ -327,7 +327,12 @@ const Checkout = () => {
                 name='notes'
                 control={control}
                 render={({ field }) => (
-                  <Input.TextArea rows={3} placeholder='Thêm ghi chú (nếu có)' {...field} />
+                  <Input.TextArea
+                    rows={3}
+                    placeholder='Thêm ghi chú (nếu có)'
+                    {...field}
+                    onResize={() => {}}
+                  />
                 )}
               />
             </Form.Item>
