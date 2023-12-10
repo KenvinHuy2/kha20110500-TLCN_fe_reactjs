@@ -1,18 +1,18 @@
 import { CarOutlined, CreditCardOutlined, DollarOutlined, ShopOutlined } from '@ant-design/icons';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { Alert, Button, Form, Image, Input, Radio } from 'antd';
+import { Alert, Button, Form, Image, Radio } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { NumericFormat } from 'react-number-format';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { DynamicTable, FormInput } from '../../core/components';
 import { DeliveryOptions, PaymentMethods } from '../../core/constants';
 import { AlertService, OrdersService } from '../../core/services';
 import { storeActions, storeSelectors } from '../../core/store';
 import Payments from './payments/Payments';
 import './styles.scss';
-import { useNavigate } from 'react-router-dom';
 
 const deliveryOptions = [
   {
@@ -242,7 +242,7 @@ const Checkout = () => {
                       <div key={option.value} className='p-3'>
                         <Radio value={option.value} className='checkout-option'>
                           <span className='mx-2'>{option.icon}</span>
-                          <span>{option.label}</span>
+                          <span className='text-capitalize'>{option.label}</span>
                         </Radio>
                       </div>
                     ))}
@@ -300,7 +300,7 @@ const Checkout = () => {
                       <div key={option.value} className='p-3'>
                         <Radio value={option.value} className='checkout-option'>
                           <span className='mx-2'>{option.icon}</span>
-                          <span>{option.label}</span>
+                          <span className='text-capitalize'>{option.label}</span>
                         </Radio>
                       </div>
                     ))}
@@ -327,13 +327,11 @@ const Checkout = () => {
                 name='notes'
                 control={control}
                 render={({ field }) => (
-                  <Input.TextArea
+                  <textarea
+                    className='form-control'
                     rows={3}
                     placeholder='Thêm ghi chú (nếu có)'
-                    {...field}
-                    onResize={() => {}}
-                    autoSize={false}
-                  />
+                    {...field}></textarea>
                 )}
               />
             </Form.Item>

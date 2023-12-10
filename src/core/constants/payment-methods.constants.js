@@ -1,5 +1,5 @@
 export const PaymentMethods = {
-  CashOnDelivery: 'Thanh toán khi nhận hàng',
-  Credit: 'Thẻ tín dụng',
-  CastAtShop: 'Thanh toán tại của hàng',
+  CashOnDelivery: 'thanh toán khi nhận hàng',
+  Credit: 'thẻ tín dụng',
+  CastAtShop: 'thanh toán tại của hàng',
 };
