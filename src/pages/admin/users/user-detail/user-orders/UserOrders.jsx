@@ -1,12 +1,11 @@
-import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Descriptions, Image, Table, Tag } from 'antd';
+import { Descriptions, Image, Table, Tag } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useMemo, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useDispatch, useSelector } from 'react-redux';
-import { storeActions, storeSelectors } from '../../../../../core/store';
-import { AlertService, OrdersService } from '../../../../../core/services';
 import { DynamicTable } from '../../../../../core/components';
+import { AlertService, OrdersService } from '../../../../../core/services';
+import { storeActions, storeSelectors } from '../../../../../core/store';
 
 const colorMap = {
   'chưa thanh toán': 'orange',
@@ -17,10 +16,10 @@ const colorMap = {
   'hoàn tất': 'green',
   'đã huỷ': 'red',
 };
+
 const UserOrders = ({ userId }) => {
   const [orders, setOrders] = useState([]);
   const dispatch = useDispatch();
-  const currentUser = useSelector(storeSelectors.selectCurrentUser);
 
   const mainTableColumns = useMemo(() => {
     return [
@@ -111,7 +110,7 @@ const UserOrders = ({ userId }) => {
     const getOrders = async () => {
       try {
         dispatch(storeActions.showLoading());
-        const orders = await OrdersService.getOrdersByUserId(currentUser._id);
+        const orders = await OrdersService.getOrdersByUserId(userId);
         setOrders(orders);
       } catch (error) {
         AlertService.error(error?.response?.data?.message || error.message);
@@ -125,13 +124,7 @@ const UserOrders = ({ userId }) => {
 
   return (
     <>
-      <div className='container pb-5'>
-        <div className='pt-5'>
-          <h1 className='text-center page-title'>DANH SÁCH ĐẶT HÀNG</h1>
-        </div>
-        <div className='py-3 center-box'>
-          <img src='/assets/images/divider.png' alt='divider' />
-        </div>
+      <div className='px-3 pb-5'>
         <Table
           rowKey='_id'
           columns={mainTableColumns}
