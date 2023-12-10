@@ -14,7 +14,7 @@ const FormDatePicker = ({ label, error, name, control, rules, placeholder, isDis
             <DatePicker
               {...field}
               placeholder={placeholder}
-              format='MM/DD/YYYY'
+              format='DD/MM/YYYY'
               className='w-100'
               size='large'
               disabled={isDisabled}
