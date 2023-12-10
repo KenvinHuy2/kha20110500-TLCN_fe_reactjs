@@ -9,7 +9,11 @@ import { StatisticService } from '../../../../core/services/statistic.service';
 import { AlertService } from '../../../../core/services';
 import { useDispatch } from 'react-redux';
 import { storeActions } from '../../../../core/store';
-import { Line } from '@ant-design/plots';
+import { Line } from 'react-chartjs-2';
+import { Chart, CategoryScale, LinearScale, LineController, PointElement, LineElement } from 'chart.js';
+
+Chart.register(CategoryScale, LinearScale, LineController, PointElement, LineElement);
+
 
 const DEFAULT_FILTER_OPTIONS = {
   orderStatus: OrderStatus.IN_PROGRESS,
@@ -49,7 +53,17 @@ const formatOptions = [
 
 const Statistics = () => {
   const dispatch = useDispatch()
-  const [data,setData]= useState([])
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: 'Sample Data',
+        data: [],
+        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: 'rgba(75,192,192,0.2)',
+      },
+    ],
+  });
 
   const {
     handleSubmit,
@@ -62,15 +76,48 @@ const Statistics = () => {
 
   const handleSearch = async (formValues) => {
     const filterOptions = { ...formValues, startDate: moment(formValues.startDate).format('YYYY-MM-DD'), endDate: moment(formValues.endDate).format('YYYY-MM-DD') }
-    console.log(formValues.startDate,moment(formValues.startDate).format('YYYY-MM-DD'))
+    console.log(formValues.startDate, moment(formValues.startDate).format('YYYY-MM-DD'))
     try {
       dispatch(storeActions.showLoading());
       const orders = await StatisticService.getStatistics(filterOptions);
-      const convertedData = Object.entries(orders).map(([date, scales]) => ({
-        Date: date,
-        scales: scales
-      }));
-      setData(convertedData)
+
+      if (orders.length > 1) {
+        console.log("a")
+        const labels = [];
+        const dataPoints = [];
+        orders.forEach(item => {
+          const date = Object.keys(item)[0];
+          const value = item[date];
+          labels.push(date);
+          dataPoints.push(value);
+        });
+        setChartData({
+          ...chartData,
+          labels: labels,
+          datasets: [
+            {
+              ...chartData.datasets[0],
+              data: dataPoints,
+            },
+          ],
+        });
+      }else{
+
+        const labels = Object.keys(orders);
+        const dataPoints = Object.values(orders);
+        console.log(labels,dataPoints)
+    
+        setChartData({
+          ...chartData,
+          labels: labels,
+          datasets: [
+            {
+              ...chartData.datasets[0],
+              data: dataPoints,
+            },
+          ],
+        });
+      }
 
     } catch (error) {
       AlertService.error(error?.response?.data?.message || error.message);
@@ -78,13 +125,30 @@ const Statistics = () => {
       dispatch(storeActions.hideLoading());
     }
   };
-  const config = {
-    data, 
-    padding: 'auto',
-    xField: 'Date',
-    yField: 'scales',
-    xAxis: {
-      tickCount: 5,
+
+  const options = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Sample Line Chart',
+      },
+    },
+    scales: {
+      x: {
+        type: 'category',
+        title: {
+          display: true,
+          text: 'Ngày',
+        },
+      },
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Trung bình tiền',
+        },
+      },
     },
   };
   return <div className='px-3'>
@@ -137,8 +201,8 @@ const Statistics = () => {
       </div>
     </Form>
     <div>
-      {data.length > 0 && <Line {...config} />}
-    
+      <Line data={chartData} options={options} />
+
     </div>
   </div>;
 };
