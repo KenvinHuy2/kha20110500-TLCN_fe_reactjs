@@ -16,4 +16,9 @@ export const ProductsService = {
     });
     return data.responseData;
   },
+
+  deleteProduct: async (productId) => {
+    const { data } = await axiosClient.delete(`/api/products/${productId}`);
+    return data.responseData;
+  },
 };

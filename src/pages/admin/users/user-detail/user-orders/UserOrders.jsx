@@ -2,19 +2,21 @@ import { Descriptions, Image, Table, Tag } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useMemo, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { DynamicTable } from '../../../../../core/components';
+import { DeliveryStatus, OrderStatus, PaymentStatus } from '../../../../../core/constants';
 import { AlertService, OrdersService } from '../../../../../core/services';
-import { storeActions, storeSelectors } from '../../../../../core/store';
+import { storeActions } from '../../../../../core/store';
 
 const colorMap = {
-  'chưa thanh toán': 'orange',
-  'đã thanh toán': 'green',
-  'đang giao hàng': 'blue',
-  'đã giao hàng': 'green',
-  'đang xử lý': 'blue',
-  'hoàn tất': 'green',
-  'đã huỷ': 'red',
+  [PaymentStatus.NOT_YET_PAY]: 'orange',
+  [PaymentStatus.PAID]: 'green',
+  [DeliveryStatus.IN_PROGRESS]: 'blue',
+  [DeliveryStatus.DELIVERED_SUCCESS]: 'green',
+  [DeliveryStatus.DELIVERED_FAILED]: 'red',
+  [OrderStatus.IN_PROGRESS]: 'blue',
+  [OrderStatus.SUCCESS]: 'green',
+  [OrderStatus.FAILED]: 'red',
 };
 
 const UserOrders = ({ userId }) => {
@@ -31,7 +33,7 @@ const UserOrders = ({ userId }) => {
         align: 'center',
       },
       {
-        title: 'Tình trạng đơn hàng',
+        title: 'Tình trạng',
         key: 'orderStatus',
         dataIndex: 'orderStatus',
         render: (value) => (
@@ -59,6 +61,17 @@ const UserOrders = ({ userId }) => {
         title: 'Ghi chú',
         key: 'notes',
         dataIndex: 'notes',
+        render: (value) => (
+          <div
+            style={{
+              width: '200px',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>
+            {value}
+          </div>
+        ),
       },
     ];
   }, [orders.length]);
@@ -133,9 +146,16 @@ const UserOrders = ({ userId }) => {
           expandable={{
             expandedRowRender: (order) => (
               <>
+                {order.orderStatus === OrderStatus.FAILED && (
+                  <Descriptions title='Lý do huỷ' column={1}>
+                    <Descriptions.Item label=''>
+                      <em>{order.notes}</em>
+                    </Descriptions.Item>
+                  </Descriptions>
+                )}
                 <Descriptions title='Thông tin thanh toán' column={1}>
                   <Descriptions.Item label='Hình thức thanh toán'>
-                    {order.paymentMethod}
+                    <span className='text-capitalize'>{order.paymentMethod}</span>
                   </Descriptions.Item>
                   <Descriptions.Item label='Trạng thái'>
                     <Tag color={colorMap[order.paymentStatus]}>
@@ -145,7 +165,7 @@ const UserOrders = ({ userId }) => {
                 </Descriptions>
                 <Descriptions title='Thông tin vận chuyển' column={1}>
                   <Descriptions.Item label='Hình thức vận chuyên'>
-                    {order.deliveryType}
+                    <span className='text-capitalize'>{order.deliveryType}</span>
                   </Descriptions.Item>
                   <Descriptions.Item label='Tình trạng'>
                     <Tag color={colorMap[order.deliveryStatus]}>

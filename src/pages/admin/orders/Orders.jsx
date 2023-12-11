@@ -1,13 +1,16 @@
-import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Form, Tag, Image, Table, Descriptions } from 'antd';
+import { ClearOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Descriptions, Form, Image, Table, Tag } from 'antd';
+import moment from 'moment';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { NumericFormat } from 'react-number-format';
+import { useDispatch } from 'react-redux';
 import {
   DynamicTable,
   FormDatePicker,
   FormDropdown,
   FormInput,
-  FormRangePicker,
+  FormModal,
 } from '../../../core/components';
 import {
   DeliveryOptions,
@@ -16,11 +19,20 @@ import {
   PaymentMethods,
   PaymentStatus,
 } from '../../../core/constants';
-import moment from 'moment';
-import { NumericFormat } from 'react-number-format';
-import { useDispatch } from 'react-redux';
-import { storeActions } from '../../../core/store';
 import { AlertService, OrdersService } from '../../../core/services';
+import { storeActions } from '../../../core/store';
+import UpdateOrder from './update-order/UpdateOrder';
+
+const colorMap = {
+  [PaymentStatus.NOT_YET_PAY]: 'orange',
+  [PaymentStatus.PAID]: 'green',
+  [DeliveryStatus.IN_PROGRESS]: 'blue',
+  [DeliveryStatus.DELIVERED_SUCCESS]: 'green',
+  [DeliveryStatus.DELIVERED_FAILED]: 'red',
+  [OrderStatus.IN_PROGRESS]: 'blue',
+  [OrderStatus.SUCCESS]: 'green',
+  [OrderStatus.FAILED]: 'red',
+};
 
 const deliveryTypeOptions = [
   {
@@ -106,6 +118,8 @@ const DEFAULT_FILTER_OPTIONS = {
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [filterOptions, setFilterOptions] = useState({ ...DEFAULT_FILTER_OPTIONS });
   const dispatch = useDispatch();
   const {
@@ -122,6 +136,50 @@ const Orders = () => {
     setFilterOptions({ ...DEFAULT_FILTER_OPTIONS });
   };
 
+  const handleOpenUpdateOrderDialog = (order) => {
+    setIsOpen(true);
+    setSelectedOrder(order);
+  };
+
+  const handleCloseUpdateOrderDialog = () => {
+    setIsOpen(false);
+    setSelectedOrder(null);
+  };
+
+  const handleSearchProducts = (formValues) => {
+    setFilterOptions({ ...formValues });
+  };
+
+  const handleUpdateOrder = async (changes) => {
+    try {
+      dispatch(storeActions.showLoading());
+      const updatedOrders = await OrdersService.updateOrder(selectedOrder._id, changes);
+      const orderIdx = orders.findIndex((o) => o._id === updatedOrders._id);
+      if (orderIdx !== -1) {
+        orders[orderIdx] = JSON.parse(JSON.stringify(updatedOrders));
+        setOrders([...orders]);
+      }
+      setIsOpen(false);
+      setSelectedOrder(null);
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
+  };
+
+  const getOrders = async () => {
+    try {
+      dispatch(storeActions.showLoading());
+      const orders = await OrdersService.getOrders(filterOptions);
+      setOrders(orders);
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
+  };
+
   const mainTableColumns = useMemo(() => {
     return [
       {
@@ -132,11 +190,21 @@ const Orders = () => {
         align: 'center',
       },
       {
-        title: 'Tình trạng đơn hàng',
+        title: 'Người đặt',
+        key: 'fullName',
+        dataIndex: 'fullName',
+      },
+      {
+        title: 'SĐT',
+        key: 'phone',
+        dataIndex: 'phone',
+      },
+      {
+        title: 'Tình trạng',
         key: 'orderStatus',
         dataIndex: 'orderStatus',
         render: (value) => (
-          <Tag>
+          <Tag color={colorMap[value]}>
             <span className='text-capitalize'>{value}</span>
           </Tag>
         ),
@@ -160,20 +228,39 @@ const Orders = () => {
         title: 'Ghi chú',
         key: 'notes',
         dataIndex: 'notes',
+        render: (value) => (
+          <div
+            style={{
+              width: '200px',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>
+            {value}
+          </div>
+        ),
       },
       {
         title: '',
         key: 'actions',
         dataIndex: null,
         render: (_, order) => (
-          <Button size='large' type='primary'>
-            Cập nhật
-          </Button>
+          <>
+            {order.orderStatus === OrderStatus.IN_PROGRESS && (
+              <Button
+                size='large'
+                type='primary'
+                icon={<EditOutlined />}
+                onClick={() => handleOpenUpdateOrderDialog(order)}>
+                Xử lý
+              </Button>
+            )}
+          </>
         ),
         align: 'center',
       },
     ];
-  }, [orders.length]);
+  }, [orders]);
 
   const subTableColumns = useMemo(() => {
     return [
@@ -217,22 +304,6 @@ const Orders = () => {
       },
     ];
   }, []);
-
-  const getOrders = async () => {
-    try {
-      dispatch(storeActions.showLoading());
-      const orders = await OrdersService.getOrders(filterOptions);
-      setOrders(orders);
-    } catch (error) {
-      AlertService.error(error?.response?.data?.message || error.message);
-    } finally {
-      dispatch(storeActions.hideLoading());
-    }
-  };
-
-  const handleSearchProducts = (formValues) => {
-    setFilterOptions({ ...formValues });
-  };
 
   useEffect(() => {
     getOrders();
@@ -354,22 +425,29 @@ const Orders = () => {
           expandable={{
             expandedRowRender: (order) => (
               <>
+                {order.orderStatus === OrderStatus.FAILED && (
+                  <Descriptions title='Lý do huỷ' column={1}>
+                    <Descriptions.Item label=''>
+                      <em>{order.notes}</em>
+                    </Descriptions.Item>
+                  </Descriptions>
+                )}
                 <Descriptions title='Thông tin thanh toán' column={1}>
                   <Descriptions.Item label='Hình thức thanh toán'>
-                    {order.paymentMethod}
+                    <span className='text-capitalize'>{order.paymentMethod}</span>
                   </Descriptions.Item>
                   <Descriptions.Item label='Trạng thái'>
-                    <Tag>
+                    <Tag color={colorMap[order.paymentStatus]}>
                       <span className='text-capitalize'>{order.paymentStatus}</span>
                     </Tag>
                   </Descriptions.Item>
                 </Descriptions>
                 <Descriptions title='Thông tin vận chuyển' column={1}>
-                  <Descriptions.Item label='Hình thức vận chuyên'>
-                    {order.deliveryType}
+                  <Descriptions.Item label='Hình thức vận chuyển'>
+                    <span className='text-capitalize'>{order.deliveryType}</span>
                   </Descriptions.Item>
                   <Descriptions.Item label='Tình trạng'>
-                    <Tag>
+                    <Tag color={colorMap[order.deliveryStatus]}>
                       <span className='text-capitalize'>{order.deliveryStatus}</span>
                     </Tag>
                   </Descriptions.Item>
@@ -389,6 +467,18 @@ const Orders = () => {
           }}
         />
       </div>
+      <FormModal
+        isOpen={isOpen}
+        title={`CẬP NHẬT ĐƠN HÀNG #${selectedOrder && selectedOrder._id.slice(0, 8)}`}
+        onCancel={handleCloseUpdateOrderDialog}
+        isUseDefaultFooter={false}
+        width='50vw'>
+        <UpdateOrder
+          order={selectedOrder}
+          onUpdateOrder={handleUpdateOrder}
+          onCancelUpdate={handleCloseUpdateOrderDialog}
+        />
+      </FormModal>
     </>
   );
 };

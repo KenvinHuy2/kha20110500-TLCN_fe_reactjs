@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { NumericFormat } from 'react-number-format';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { DynamicTable, FormInput } from '../../core/components';
 import {
   DeliveryOptions,
@@ -136,7 +136,7 @@ const Checkout = () => {
       formValues.deliveryAddress,
       currentUser.address,
     );
-    const orderStatus = getOrderStatus();
+    const orderStatus = getOrderStatus(formValues.deliveryType);
 
     const payload = {
       userId: currentUser._id,
@@ -311,6 +311,9 @@ const Checkout = () => {
               <Controller
                 name='paymentMethod'
                 control={control}
+                rules={{
+                  required: 'Vui lòng chọn phương thức thanh toán',
+                }}
                 render={({ field }) => (
                   <Radio.Group {...field}>
                     {paymentOptions[watch('deliveryType')].map((option) => (
@@ -332,7 +335,7 @@ const Checkout = () => {
                 </Elements>
               ) : (
                 <Alert
-                  message='Hệ thống thanh toán bằng thẻ tín dụng hiện đang bị lỗi. Vui lòng chọn phương thức thanh toán khác'
+                  message='Đơn hàng của bạn có giá trị nhỏ hơn 20000 hoặc hệ thống thanh toán bằng thẻ tín dụng hiện đang bị lỗi. Vui lòng chọn phương thức thanh toán khác'
                   type='error'
                 />
               )
@@ -373,9 +376,11 @@ const Checkout = () => {
             </div>
             <hr />
             <div className='checkout-detail'>
-              <Button size='large' type='dashed'>
-                Quay lại giỏ hàng
-              </Button>
+              <NavLink to='/gio-hang'>
+                <Button size='large' type='dashed'>
+                  Quay lại giỏ hàng
+                </Button>
+              </NavLink>
               <Button
                 size='large'
                 type='primary'

@@ -36,6 +36,7 @@ const ProductCard = ({
   images,
   isAdmin,
   markers,
+  onDelete,
   productId,
   onAddToCart,
   defaultImage,
@@ -99,7 +100,11 @@ const ProductCard = ({
                   <Button size='large' icon={<EditOutlined />}>
                     Cập nhật
                   </Button>
-                  <Button size='large' icon={<DeleteOutlined />} danger>
+                  <Button
+                    size='large'
+                    icon={<DeleteOutlined />}
+                    danger
+                    onClick={() => onDelete(productId, name)}>
                     Xoá
                   </Button>
                 </Space>

@@ -1,31 +1,30 @@
-import { SearchOutlined } from '@ant-design/icons';
+import { LineChartOutlined } from '@ant-design/icons';
 import { Button, Form } from 'antd';
-import React, { useEffect, useState } from 'react';
+import {
+  CategoryScale,
+  Chart,
+  LineController,
+  LineElement,
+  LinearScale,
+  PointElement,
+} from 'chart.js';
+import React, { useState } from 'react';
+import { Line } from 'react-chartjs-2';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { FormDatePicker, FormDropdown } from '../../../../core/components';
 import { OrderStatus } from '../../../../core/constants';
-import moment from 'moment';
-import { StatisticService } from '../../../../core/services/statistic.service';
 import { AlertService } from '../../../../core/services';
-import { useDispatch } from 'react-redux';
+import { StatisticService } from '../../../../core/services/statistic.service';
 import { storeActions } from '../../../../core/store';
-import { Line } from 'react-chartjs-2';
-import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  LineController,
-  PointElement,
-  LineElement,
-} from 'chart.js';
 
 Chart.register(CategoryScale, LinearScale, LineController, PointElement, LineElement);
 
 const DEFAULT_FILTER_OPTIONS = {
-  orderStatus: OrderStatus.IN_PROGRESS,
-  statisticBy: 'date',
-  startDate: moment(),
-  endDate: new Date(),
+  orderStatus: null,
+  statisticBy: null,
+  startDate: null,
+  endDate: null,
 };
 const orderStatusOptions = [
   {
@@ -74,18 +73,16 @@ const Statistics = () => {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
   } = useForm({
     defaultValues: { ...DEFAULT_FILTER_OPTIONS },
   });
 
-  const handleSearch = async (formValues) => {
-    console.log(formValues);
+  const handleCalculateStatistic = async (formValues) => {
     const filterOptions = {
       ...formValues,
       startDate:
-        formValues.startDate && formValues.startDate._d ? formValues.startDate._d : undefined,
-      endDate: formValues.endDate && formValues.endDate._d ? formValues.endDate._d : undefined,
+        formValues.startDate && formValues.startDate.$d ? formValues.startDate.$d : undefined,
+      endDate: formValues.endDate && formValues.endDate.$d ? formValues.endDate.$d : undefined,
     };
 
     try {
@@ -142,17 +139,12 @@ const Statistics = () => {
     },
   };
 
-  useEffect(() => {
-    handleSearch({
-      ...DEFAULT_FILTER_OPTIONS,
-      startDate: new Date(),
-      endDate: new Date(),
-    });
-  }, []);
-
   return (
     <div className='px-3'>
-      <Form layout='vertical' className='search-bar-form' onFinish={handleSubmit(handleSearch)}>
+      <Form
+        layout='vertical'
+        className='search-bar-form'
+        onFinish={handleSubmit(handleCalculateStatistic)}>
         <div className='row' style={{ alignItems: 'center' }}>
           <div className='col-md-2 col-xs-12'>
             <FormDatePicker
@@ -160,6 +152,10 @@ const Statistics = () => {
               name='startDate'
               control={control}
               placeholder='Từ ngày'
+              error={errors.startDate}
+              rules={{
+                required: 'Vui lòng chọn giá trị',
+              }}
             />
           </div>
           <div className='col-md-2 col-xs-12'>
@@ -168,16 +164,23 @@ const Statistics = () => {
               name='endDate'
               control={control}
               placeholder='Đến ngày'
+              error={errors.endDate}
+              rules={{
+                required: 'Vui lòng chọn giá trị',
+              }}
             />
           </div>
           <div className='col-md-3 col-xs-12'>
             <FormDropdown
-              label='Tìm kiếm theo'
-              placeholder='Tìm kiếm theo'
+              label='Thống kê theo'
+              placeholder='Chọn hình thức thống kê'
               name='statisticBy'
               control={control}
-              error={errors.paymentMethod}
+              error={errors.statisticBy}
               dropdownOptions={formatOptions}
+              rules={{
+                required: 'Vui lòng chọn giá trị',
+              }}
             />
           </div>
           <div className='col-md-3 col-xs-12'>
@@ -188,11 +191,14 @@ const Statistics = () => {
               control={control}
               error={errors.orderStatus}
               dropdownOptions={orderStatusOptions}
+              rules={{
+                required: 'Vui lòng chọn giá trị',
+              }}
             />
           </div>
           <div className='col-md-2 col-xs-12 text-center'>
-            <Button htmlType='submit' type='primary' size='large' icon={<SearchOutlined />}>
-              Tìm kiếm
+            <Button htmlType='submit' type='primary' size='large' icon={<LineChartOutlined />}>
+              Thống Kê
             </Button>
           </div>
         </div>

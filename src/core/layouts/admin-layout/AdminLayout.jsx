@@ -1,17 +1,16 @@
 import {
   CoffeeOutlined,
   FormOutlined,
-  GiftFilled,
   HomeOutlined,
   LogoutOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import './styles.scss';
 import { useDispatch } from 'react-redux';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { storeActions } from '../../store';
+import './styles.scss';
 
 const AdminLayout = () => {
   const dispatch = useDispatch();
@@ -67,23 +66,6 @@ const AdminLayout = () => {
           {
             key: '/admin/quan-ly-san-pham/markers',
             label: <NavLink to='quan-ly-san-pham/markers'>Markers</NavLink>,
-          },
-        ],
-      },
-      {
-        key: '/admin/quan-ly-khuyen-mai',
-        label: 'Quản lý khuyến mãi',
-        icon: <GiftFilled />,
-        children: [
-          {
-            key: '/admin/quan-ly-khuyen-mai/danh-sach-khuyen-mai',
-            label: (
-              <NavLink to='quan-ly-khuyen-mai/danh-sach-khuyen-mai'>Danh sách khuyến mãi</NavLink>
-            ),
-          },
-          {
-            key: '/admin/quan-ly-khuyen-mai/tao-khuyen-mai',
-            label: <NavLink to='quan-ly-khuyen-mai/tao-khuyen-mai'>Tạo khuyến mãi</NavLink>,
           },
         ],
       },

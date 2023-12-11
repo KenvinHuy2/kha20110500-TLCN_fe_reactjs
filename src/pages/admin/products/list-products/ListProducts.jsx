@@ -79,6 +79,25 @@ const ListProducts = () => {
     }
   };
 
+  const handleDeleteProduct = (productId, productName) => {
+    AlertService.confirm(`Bạn chắc chắn muốn xoá sản phẩm ${productName} ?`).then(
+      async ({ isConfirmed }) => {
+        if (isConfirmed) {
+          try {
+            dispatch(storeActions.showLoading());
+            await ProductsService.deleteProduct(productId);
+            AlertService.success(`Đã xoá sản phẩm ${productName}`);
+            getAllProducts(filterOptions);
+          } catch (error) {
+            AlertService.error(error?.response?.data?.message || error.message);
+          } finally {
+            dispatch(storeActions.hideLoading());
+          }
+        }
+      },
+    );
+  };
+
   useEffect(() => {
     const getAllProductTypesAndMarkers = async () => {
       try {
@@ -174,6 +193,7 @@ const ListProducts = () => {
                 markers={product?.markers || []}
                 price={product?.defaultPrice?.price || 0}
                 defaultImage={product?.defaultImage || '/assets/images/no_images.jpeg'}
+                onDelete={handleDeleteProduct}
               />
             ))
           ) : (
