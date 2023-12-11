@@ -1,4 +1,4 @@
-import { ClearOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import { ClearOutlined, DollarOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Descriptions, Form, Image, Table, Tag } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -168,6 +168,30 @@ const Orders = () => {
     }
   };
 
+  const handleRefund = (order) => {
+    AlertService.confirmRefund(`Đã hoàn tiền theo thông tin của khách hàng`).then(
+      async ({ isConfirmed }) => {
+        if (isConfirmed) {
+          try {
+            dispatch(storeActions.showLoading());
+            const updatedOrders = await OrdersService.updateOrder(order._id, {
+              paymentStatus: PaymentStatus.REFUNDED,
+            });
+            const orderIdx = orders.findIndex((o) => o._id === updatedOrders._id);
+            if (orderIdx !== -1) {
+              orders[orderIdx] = JSON.parse(JSON.stringify(updatedOrders));
+              setOrders([...orders]);
+            }
+          } catch (error) {
+            AlertService.error(error?.response?.data?.message || error.message);
+          } finally {
+            dispatch(storeActions.hideLoading());
+          }
+        }
+      },
+    );
+  };
+
   const getOrders = async () => {
     try {
       dispatch(storeActions.showLoading());
@@ -198,6 +222,7 @@ const Orders = () => {
         title: 'SĐT',
         key: 'phone',
         dataIndex: 'phone',
+        align: 'center',
       },
       {
         title: 'Tình trạng',
@@ -231,7 +256,7 @@ const Orders = () => {
         render: (value) => (
           <div
             style={{
-              width: '200px',
+              maxWidth: '200px',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
@@ -255,6 +280,16 @@ const Orders = () => {
                 Xử lý
               </Button>
             )}
+            {order.orderStatus === OrderStatus.FAILED &&
+              order.paymentStatus === PaymentStatus.PAID && (
+                <Button
+                  size='large'
+                  type='primary'
+                  icon={<DollarOutlined />}
+                  onClick={() => handleRefund(order)}>
+                  Hoàn tiền
+                </Button>
+              )}
           </>
         ),
         align: 'center',

@@ -27,12 +27,15 @@ const OrderHistory = () => {
 
   const handleCancelOrder = async (order) => {
     try {
-      const { value: notes } = await AlertService.alertWithTextArea();
+      const { value: notes, isConfirmed } = await AlertService.alertWithTextArea();
       const changes = {
         notes,
         orderStatus: OrderStatus.FAILED,
         deliveryStatus: DeliveryStatus.DELIVERED_FAILED,
       };
+      if (!isConfirmed) {
+        return;
+      }
       dispatch(storeActions.showLoading());
       const updatedOrders = await OrdersService.updateOrder(order._id, changes);
       const orderIdx = orders.findIndex((o) => o._id === updatedOrders._id);
@@ -40,6 +43,7 @@ const OrderHistory = () => {
         orders[orderIdx] = JSON.parse(JSON.stringify(updatedOrders));
         setOrders([...orders]);
       }
+      AlertService.success(`Đã huỷ đơn hàng #${order._id.slice(0, 8)}`);
     } catch (error) {
       AlertService.error(error?.response?.data?.message || error.message);
     } finally {

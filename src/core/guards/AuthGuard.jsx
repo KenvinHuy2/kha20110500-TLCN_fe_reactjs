@@ -11,7 +11,7 @@ const AdminGuard = ({ isAdmin, children }) => {
     if (!currentUser) {
       return navigate('/dang-nhap');
     }
-    if (currentUser.isAdmin !== isAdmin) {
+    if (isAdmin && currentUser.isAdmin !== isAdmin) {
       return navigate(-1);
     }
   }, []);

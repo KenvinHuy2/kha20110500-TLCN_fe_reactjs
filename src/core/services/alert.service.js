@@ -57,7 +57,8 @@ export const AlertService = {
       title: 'Vui Lòng Cho Biết Lý Do Huỷ',
       input: 'textarea',
       inputLabel: 'Lý do',
-      inputPlaceholder: 'Nhập lý do huỷ',
+      inputPlaceholder:
+        'Nhập lý do huỷ. Nếu bạn đã thanh toán, vui lòng nhập thông tin để chúng tôi hoàn tiền cho bạn',
       inputValidator: (value) => {
         if (!value.trim()) {
           return 'Vui lòng nhập lý do';
@@ -85,6 +86,17 @@ export const AlertService = {
       showCancelButton: true,
       cancelButtonText: 'Huỷ',
       confirmButtonText: 'Cập nhật',
+    });
+  },
+
+  confirmRefund: (notes) => {
+    return Swal.fire({
+      icon: 'question',
+      title: 'Xác nhận Hoàn Tiền',
+      text: notes,
+      showCancelButton: true,
+      cancelButtonText: 'Đóng',
+      confirmButtonText: 'Xác nhận',
     });
   },
 };
