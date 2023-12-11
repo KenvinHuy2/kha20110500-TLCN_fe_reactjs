@@ -22,4 +22,9 @@ export const OrdersService = {
     });
     return data.responseData;
   },
+
+  updateOrder: async (orderId, changes) => {
+    const { data } = await axiosClient.patch(`/api/orders/${orderId}`, changes);
+    return data.responseData;
+  },
 };

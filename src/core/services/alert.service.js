@@ -51,4 +51,40 @@ export const AlertService = {
       cancelButtonText: 'Huỷ',
     });
   },
+
+  alertWithTextArea: () => {
+    return Swal.fire({
+      title: 'Vui Lòng Cho Biết Lý Do Huỷ',
+      input: 'textarea',
+      inputLabel: 'Lý do',
+      inputPlaceholder: 'Nhập lý do huỷ',
+      inputValidator: (value) => {
+        if (!value.trim()) {
+          return 'Vui lòng nhập lý do';
+        }
+      },
+      showCancelButton: true,
+      cancelButtonText: 'Đóng',
+      confirmButtonText: 'Huỷ',
+      confirmButtonColor: 'red',
+    });
+  },
+
+  alertWithInputNumber: (defaultValue) => {
+    return Swal.fire({
+      title: 'Nhập Số Lượng Muốn Thay Đổi',
+      input: 'number',
+      inputLabel: 'Số lượng',
+      inputValue: defaultValue || 0,
+      inputPlaceholder: 'Nhập số lượng muốn đổi',
+      inputValidator: (value) => {
+        if (!Number.isInteger(+value) || +value < 0) {
+          return 'Số lượng không hợp lệ';
+        }
+      },
+      showCancelButton: true,
+      cancelButtonText: 'Huỷ',
+      confirmButtonText: 'Cập nhật',
+    });
+  },
 };

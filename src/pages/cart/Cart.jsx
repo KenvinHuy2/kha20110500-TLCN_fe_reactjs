@@ -1,10 +1,11 @@
-import { DeleteOutlined, DollarOutlined } from '@ant-design/icons';
-import { Button, Empty, Image, InputNumber, Select } from 'antd';
+import { DeleteOutlined, DollarOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Empty, Image, Select, Space, Tooltip } from 'antd';
 import React, { useEffect, useMemo } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { DynamicTable } from '../../core/components';
+import { AlertService } from '../../core/services';
 import { storeActions, storeSelectors } from '../../core/store';
 import './styles.scss';
 
@@ -47,6 +48,30 @@ const Cart = () => {
         products: [oldProduct, newProduct],
       }),
     );
+  };
+
+  const handleUpdateAmount = async (product) => {
+    try {
+      const { value: newAmount } = await AlertService.alertWithInputNumber(product.amount);
+      if (+newAmount === product.amount) {
+        return;
+      }
+      dispatch(
+        storeActions.addProductToCart({
+          userId: currentUser._id,
+          products: [
+            {
+              amount: newAmount - product.amount,
+              size: product.size,
+              image: product.image,
+              productId: product.productId,
+            },
+          ],
+        }),
+      );
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    }
   };
 
   const handleRemoveProduct = (product) => {
@@ -111,9 +136,6 @@ const Cart = () => {
         dataIndex: 'amount',
         key: 'amount',
         align: 'center',
-        render: (value, product) => (
-          <InputNumber size='large' min={0} defaultValue={value} value={value} />
-        ),
       },
       {
         title: 'Đơn giá',
@@ -134,14 +156,23 @@ const Cart = () => {
         dataIndex: null,
         key: 'actions',
         render: (_, product) => (
-          <Button
-            type='primary'
-            danger
-            size='large'
-            icon={<DeleteOutlined />}
-            onClick={() => handleRemoveProduct(product)}>
-            Xoá
-          </Button>
+          <Space>
+            <Tooltip title='Sửa số lượng'>
+              <Button
+                type='primary'
+                size='large'
+                icon={<EditOutlined />}
+                onClick={() => handleUpdateAmount(product)}></Button>
+            </Tooltip>
+            <Tooltip title='Xoá sản phẩm'>
+              <Button
+                type='primary'
+                danger
+                size='large'
+                icon={<DeleteOutlined />}
+                onClick={() => handleRemoveProduct(product)}></Button>
+            </Tooltip>
+          </Space>
         ),
         align: 'center',
       },

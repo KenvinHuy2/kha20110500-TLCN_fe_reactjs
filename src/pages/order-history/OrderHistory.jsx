@@ -5,23 +5,47 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useDispatch, useSelector } from 'react-redux';
 import { DynamicTable } from '../../core/components';
+import { DeliveryStatus, OrderStatus, PaymentStatus } from '../../core/constants';
 import { AlertService, OrdersService } from '../../core/services';
 import { storeActions, storeSelectors } from '../../core/store';
 
 const colorMap = {
-  'chưa thanh toán': 'orange',
-  'đã thanh toán': 'green',
-  'đang giao hàng': 'blue',
-  'đã giao hàng': 'green',
-  'đang xử lý': 'blue',
-  'hoàn tất': 'green',
-  'đã huỷ': 'red',
+  [PaymentStatus.NOT_YET_PAY]: 'orange',
+  [PaymentStatus.PAID]: 'green',
+  [DeliveryStatus.IN_PROGRESS]: 'blue',
+  [DeliveryStatus.DELIVERED_SUCCESS]: 'green',
+  [DeliveryStatus.DELIVERED_FAILED]: 'red',
+  [OrderStatus.IN_PROGRESS]: 'blue',
+  [OrderStatus.SUCCESS]: 'green',
+  [OrderStatus.FAILED]: 'red',
 };
 
 const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
   const dispatch = useDispatch();
   const currentUser = useSelector(storeSelectors.selectCurrentUser);
+
+  const handleCancelOrder = async (order) => {
+    try {
+      const { value: notes } = await AlertService.alertWithTextArea();
+      const changes = {
+        notes,
+        orderStatus: OrderStatus.FAILED,
+        deliveryStatus: DeliveryStatus.DELIVERED_FAILED,
+      };
+      dispatch(storeActions.showLoading());
+      const updatedOrders = await OrdersService.updateOrder(order._id, changes);
+      const orderIdx = orders.findIndex((o) => o._id === updatedOrders._id);
+      if (orderIdx !== -1) {
+        orders[orderIdx] = JSON.parse(JSON.stringify(updatedOrders));
+        setOrders([...orders]);
+      }
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
+  };
 
   const mainTableColumns = useMemo(() => {
     return [
@@ -61,15 +85,35 @@ const OrderHistory = () => {
         title: 'Ghi chú',
         key: 'notes',
         dataIndex: 'notes',
+        render: (value) => (
+          <div
+            style={{
+              width: '200px',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>
+            {value}
+          </div>
+        ),
       },
       {
         title: '',
         key: 'actions',
         dataIndex: null,
         render: (_, order) => (
-          <Button size='large' type='primary' danger icon={<DeleteOutlined />}>
-            Huỷ
-          </Button>
+          <>
+            {order.orderStatus === OrderStatus.IN_PROGRESS && (
+              <Button
+                size='large'
+                type='primary'
+                danger
+                icon={<DeleteOutlined />}
+                onClick={() => handleCancelOrder(order)}>
+                Huỷ
+              </Button>
+            )}
+          </>
         ),
         align: 'center',
       },
@@ -152,9 +196,16 @@ const OrderHistory = () => {
           expandable={{
             expandedRowRender: (order) => (
               <>
+                {order.orderStatus === OrderStatus.FAILED && (
+                  <Descriptions title='Lý do huỷ' column={1}>
+                    <Descriptions.Item label=''>
+                      <em>{order.notes}</em>
+                    </Descriptions.Item>
+                  </Descriptions>
+                )}
                 <Descriptions title='Thông tin thanh toán' column={1}>
                   <Descriptions.Item label='Hình thức thanh toán'>
-                    {order.paymentMethod}
+                    <span className='text-capitalize'>{order.paymentMethod}</span>
                   </Descriptions.Item>
                   <Descriptions.Item label='Trạng thái'>
                     <Tag color={colorMap[order.paymentStatus]}>
@@ -164,7 +215,7 @@ const OrderHistory = () => {
                 </Descriptions>
                 <Descriptions title='Thông tin vận chuyển' column={1}>
                   <Descriptions.Item label='Hình thức vận chuyên'>
-                    {order.deliveryType}
+                    <span className='text-capitalize'>{order.deliveryType}</span>
                   </Descriptions.Item>
                   <Descriptions.Item label='Tình trạng'>
                     <Tag color={colorMap[order.deliveryStatus]}>

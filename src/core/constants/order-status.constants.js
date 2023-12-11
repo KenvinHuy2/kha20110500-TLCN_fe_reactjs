@@ -1,5 +1,5 @@
 export const OrderStatus = {
   IN_PROGRESS: 'đang xử lý',
   SUCCESS: 'thành công',
-  FAILED: 'thất bại',
+  FAILED: 'đã huỷ',
 };

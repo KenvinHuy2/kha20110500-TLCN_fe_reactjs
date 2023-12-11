@@ -38,11 +38,6 @@ const menus = [
     label: 'thức uống',
   },
   {
-    id: 'khuyen-mai',
-    path: '/khuyen-mai',
-    label: 'khuyến mãi',
-  },
-  {
     id: 've-chung-toi',
     path: '/ve-chung-toi',
     label: 'về chúng tôi',
@@ -80,16 +75,6 @@ const Header = () => {
           <NavLink to='lich-su-dat-hang'>
             <Button size='large' type='text' icon={<HistoryOutlined />}>
               Lịch sử đặt hàng
-            </Button>
-          </NavLink>
-        ),
-      },
-      {
-        key: '3',
-        label: (
-          <NavLink to='khuyen-mai-cua-toi'>
-            <Button size='large' type='text' icon={<GiftOutlined />}>
-              Khuyến mãi của tôi
             </Button>
           </NavLink>
         ),

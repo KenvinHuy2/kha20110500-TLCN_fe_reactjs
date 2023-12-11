@@ -8,7 +8,13 @@ import { NumericFormat } from 'react-number-format';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { DynamicTable, FormInput } from '../../core/components';
-import { DeliveryOptions, PaymentMethods } from '../../core/constants';
+import {
+  DeliveryOptions,
+  DeliveryStatus,
+  OrderStatus,
+  PaymentMethods,
+  PaymentStatus,
+} from '../../core/constants';
 import { AlertService, OrdersService } from '../../core/services';
 import { storeActions, storeSelectors } from '../../core/store';
 import Payments from './payments/Payments';
@@ -27,38 +33,47 @@ const deliveryOptions = [
   },
 ];
 
-const paymentOptions = [
-  {
-    label: PaymentMethods.CastAtShop,
-    value: PaymentMethods.CastAtShop,
-    icon: <DollarOutlined style={{ fontSize: 24 }} />,
-  },
-  {
-    label: PaymentMethods.CashOnDelivery,
-    value: PaymentMethods.CashOnDelivery,
-    icon: <CarOutlined style={{ fontSize: 24 }} />,
-  },
-  {
-    label: PaymentMethods.Credit,
-    value: PaymentMethods.Credit,
-    icon: <CreditCardOutlined style={{ fontSize: 36 }} />,
-  },
-];
+const paymentOptions = {
+  [DeliveryOptions.PICKUP]: [
+    {
+      label: PaymentMethods.CastAtShop,
+      value: PaymentMethods.CastAtShop,
+      icon: <DollarOutlined style={{ fontSize: 24 }} />,
+    },
+    {
+      label: PaymentMethods.Credit,
+      value: PaymentMethods.Credit,
+      icon: <CreditCardOutlined style={{ fontSize: 36 }} />,
+    },
+  ],
+  [DeliveryOptions.DELIVERY]: [
+    {
+      label: PaymentMethods.CashOnDelivery,
+      value: PaymentMethods.CashOnDelivery,
+      icon: <CarOutlined style={{ fontSize: 24 }} />,
+    },
+    {
+      label: PaymentMethods.Credit,
+      value: PaymentMethods.Credit,
+      icon: <CreditCardOutlined style={{ fontSize: 36 }} />,
+    },
+  ],
+};
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 const getDeliveryStatus = (deliveryType) => {
   if (deliveryType === DeliveryOptions.DELIVERY) {
-    return 'đang giao hàng';
+    return DeliveryStatus.IN_PROGRESS;
   }
-  return 'đã giao hàng';
+  return DeliveryStatus.DELIVERED_SUCCESS;
 };
 
 const getPaymentStatus = (paymentMethod) => {
   if (paymentMethod === PaymentMethods.CashOnDelivery) {
-    return 'chưa thanh toán';
+    return PaymentStatus.NOT_YET_PAY;
   }
-  return 'đã thanh toán';
+  return PaymentStatus.PAID;
 };
 
 const getOrderProducts = (products) => {
@@ -77,9 +92,9 @@ const getDeliveryAddress = (deliveryType, formAddress, userAddress) => {
 
 const getOrderStatus = (deliveryType) => {
   if (deliveryType === DeliveryOptions.PICKUP) {
-    return 'hoàn tất';
+    return OrderStatus.SUCCESS;
   }
-  return 'đang xử lý';
+  return OrderStatus.IN_PROGRESS;
 };
 
 const Checkout = () => {
@@ -141,7 +156,9 @@ const Checkout = () => {
       dispatch(storeActions.showLoading());
       const order = await OrdersService.createOrder(payload);
       dispatch(storeActions.resetCart());
-      AlertService.success(`Đặt hàng thành công. ID đơn hàng: ${order.orderId}`);
+      AlertService.success(
+        `Đặt hàng thành công. ID đơn hàng: ${order.orderId.toString().slice(0, 8)}`,
+      );
       return navigate('/lich-su-dat-hang');
     } catch (error) {
       AlertService.error(error?.response?.data?.message || error.message);
@@ -296,7 +313,7 @@ const Checkout = () => {
                 control={control}
                 render={({ field }) => (
                   <Radio.Group {...field}>
-                    {paymentOptions.map((option) => (
+                    {paymentOptions[watch('deliveryType')].map((option) => (
                       <div key={option.value} className='p-3'>
                         <Radio value={option.value} className='checkout-option'>
                           <span className='mx-2'>{option.icon}</span>
