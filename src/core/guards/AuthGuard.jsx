@@ -8,7 +8,10 @@ const AdminGuard = ({ isAdmin, children }) => {
   const currentUser = useSelector(storeSelectors.selectCurrentUser);
 
   useEffect(() => {
-    if (!currentUser || currentUser.isAdmin !== isAdmin) {
+    if (!currentUser) {
+      return navigate('/dang-nhap');
+    }
+    if (currentUser.isAdmin !== isAdmin) {
       return navigate(-1);
     }
   }, []);

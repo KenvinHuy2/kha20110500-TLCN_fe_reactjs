@@ -2,8 +2,8 @@ import React, { lazy } from 'react';
 import { useRoutes } from 'react-router-dom';
 import './App.scss';
 import { LazyLoadComponent, LoadingSpinner } from './core/components';
-import { AdminLayout, ClientLayout } from './core/layouts';
 import { AuthGuard, NonAuthGuard } from './core/guards';
+import { AdminLayout, ClientLayout } from './core/layouts';
 
 // Client pages
 const Home = lazy(() => import('./pages/home'));
@@ -17,7 +17,6 @@ const Checkout = lazy(() => import('./pages/checkout'));
 const Register = lazy(() => import('./pages/register'));
 const MyProfile = lazy(() => import('./pages/my-profile'));
 const OrderHistory = lazy(() => import('./pages/order-history'));
-const MyPromotions = lazy(() => import('./pages/my-promotions'));
 const ClientPromotions = lazy(() => import('./pages/promotions'));
 const PageNotFound = lazy(() => import('./pages/page-not-found'));
 
@@ -54,7 +53,7 @@ const App = () => {
     {
       path: '/admin',
       element: (
-        <AuthGuard isAdmin>
+        <AuthGuard isAdmin={true}>
           <AdminLayout />
         </AuthGuard>
       ),
@@ -179,23 +178,35 @@ const App = () => {
         },
         {
           path: 'gio-hang',
-          element: <LazyLoadComponent component={<Cart />} />,
+          element: (
+            <AuthGuard>
+              <LazyLoadComponent component={<Cart />} />
+            </AuthGuard>
+          ),
         },
         {
           path: 'thanh-toan-don-hang',
-          element: <LazyLoadComponent component={<Checkout />} />,
+          element: (
+            <AuthGuard>
+              <LazyLoadComponent component={<Checkout />} />
+            </AuthGuard>
+          ),
         },
         {
           path: 'thong-tin-ca-nhan',
-          element: <LazyLoadComponent component={<MyProfile />} />,
+          element: (
+            <AuthGuard>
+              <LazyLoadComponent component={<MyProfile />} />
+            </AuthGuard>
+          ),
         },
         {
           path: 'lich-su-dat-hang',
-          element: <LazyLoadComponent component={<OrderHistory />} />,
-        },
-        {
-          path: 'khuyen-mai-cua-toi',
-          element: <LazyLoadComponent component={<MyPromotions />} />,
+          element: (
+            <AuthGuard>
+              <LazyLoadComponent component={<OrderHistory />} />
+            </AuthGuard>
+          ),
         },
         {
           path: '*',
