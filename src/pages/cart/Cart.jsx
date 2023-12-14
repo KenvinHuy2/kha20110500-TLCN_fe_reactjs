@@ -52,8 +52,10 @@ const Cart = () => {
 
   const handleUpdateAmount = async (product) => {
     try {
-      const { value: newAmount } = await AlertService.alertWithInputNumber(product.amount);
-      if (+newAmount === product.amount) {
+      const { value: newAmount, isConfirmed } = await AlertService.alertWithInputNumber(
+        product.amount,
+      );
+      if (+newAmount === product.amount || !isConfirmed) {
         return;
       }
       dispatch(
@@ -109,7 +111,7 @@ const Cart = () => {
         key: 'productName',
       },
       {
-        title: 'Hỉnh ảnh',
+        title: 'Hình ảnh',
         dataIndex: 'image',
         key: 'image',
         render: (value) => (

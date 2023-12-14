@@ -368,10 +368,6 @@ const Checkout = () => {
                   <span>Tổng tiền sản phẩm: </span>
                   <NumericFormat value={totalBill} displayType='text' thousandSeparator=',' />
                 </div>
-                <div className='checkout-detail'>
-                  <span>Phí vận chuyển: </span>
-                  <NumericFormat value={0} displayType='text' thousandSeparator=',' />
-                </div>
               </div>
             </div>
             <hr />
