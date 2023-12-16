@@ -39,6 +39,7 @@ const Markers = lazy(() => import('./pages/admin/products/markers'));
 const ProductTypes = lazy(() => import('./pages/admin/products/product-types'));
 const ListProducts = lazy(() => import('./pages/admin/products/list-products'));
 const CreateProduct = lazy(() => import('./pages/admin/products/create-product'));
+const UpdateProduct = lazy(() => import('./pages/admin/products/update-product'));
 
 // Orders
 const Orders = lazy(() => import('./pages/admin/orders'));
@@ -113,6 +114,10 @@ const App = () => {
             {
               path: 'markers',
               element: <LazyLoadComponent component={<Markers />} />,
+            },
+            {
+              path: 'cap-nhat-san-pham/:productId',
+              element: <LazyLoadComponent component={<UpdateProduct />} />,
             },
           ],
         },

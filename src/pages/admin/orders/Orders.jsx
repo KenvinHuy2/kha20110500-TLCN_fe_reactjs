@@ -305,7 +305,7 @@ const Orders = () => {
         key: 'productName',
       },
       {
-        title: 'Hỉnh ảnh',
+        title: 'Hình ảnh',
         dataIndex: 'image',
         key: 'image',
         render: (value) => (

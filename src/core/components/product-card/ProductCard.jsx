@@ -12,6 +12,7 @@ import { NumericFormat } from 'react-number-format';
 import FormDropdown from '../form-dropdown/FormDropdown';
 import ImagesCarousel from '../images-carousel/ImagesCarousel';
 import './styles.scss';
+import { NavLink } from 'react-router-dom';
 
 const sizeOptions = [
   {
@@ -97,9 +98,11 @@ const ProductCard = ({
             {isAdmin ? (
               <>
                 <Space size='middle'>
-                  <Button size='large' icon={<EditOutlined />}>
-                    Cập nhật
-                  </Button>
+                  <NavLink to={`/admin/quan-ly-san-pham/cap-nhat-san-pham/${productId}`}>
+                    <Button size='large' icon={<EditOutlined />}>
+                      Cập nhật
+                    </Button>
+                  </NavLink>
                   <Button
                     size='large'
                     icon={<DeleteOutlined />}

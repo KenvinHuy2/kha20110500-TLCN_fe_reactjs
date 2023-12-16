@@ -1,8 +1,9 @@
-import { UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Upload } from 'antd';
+import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Form, Image, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { FormDropdown, FormInput, FormTextArea } from '../../../../core/components';
 import {
   AlertService,
@@ -25,11 +26,130 @@ const DEFAULT_FORM_VALUES = {
   priceForSizeL: null,
 };
 
-const CreateProduct = () => {
-  const dispatch = useDispatch();
-  const [markers, setMarkers] = useState([]);
+const UpdateProduct = () => {
+  const { productId } = useParams();
+  const [product, setProduct] = useState(null);
   const [productTypes, setProductTypes] = useState([]);
+  const [markers, setMarkers] = useState([]);
+  const [images, setImages] = useState([]);
   const [productImages, setProductImages] = useState([]);
+
+  const {
+    reset,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      ...DEFAULT_FORM_VALUES,
+    },
+  });
+  const dispatch = useDispatch();
+
+  const setFormValue = (product) => {
+    const formValues = {};
+    for (let field in product) {
+      switch (field) {
+        case 'name': {
+          formValues.name = product.name;
+          break;
+        }
+        case 'productType': {
+          formValues.productType = product.productType._id;
+          break;
+        }
+        case 'markers': {
+          formValues.markers = product.markers.map((marker) => marker._id);
+          break;
+        }
+        case 'prices': {
+          product.prices.forEach((price) => {
+            formValues['size' + price.size] = price.size;
+            formValues['priceForSize' + price.size] = price.price;
+          });
+          break;
+        }
+        case 'images': {
+          setImages(product.images);
+          break;
+        }
+        case 'desc': {
+          formValues.desc = product.desc;
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    }
+    reset(formValues);
+  };
+
+  const getProductTypesAndMarkers = async () => {
+    try {
+      dispatch(storeActions.showLoading());
+      const [markers, productTypes] = await Promise.all([
+        MarkersService.getAllMarkers(),
+        ProductTypesService.getAllProductTypes(),
+      ]);
+      setMarkers(markers.map((marker) => ({ value: marker._id, label: marker.name })));
+      setProductTypes(
+        productTypes.map((productType) => ({ value: productType._id, label: productType.name })),
+      );
+    } catch (error) {
+      AlertService.error(error?.response?.data.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
+  };
+
+  const getProductById = async () => {
+    try {
+      dispatch(storeActions.showLoading());
+      const product = await ProductsService.getProductById(productId);
+      setProduct(product);
+      setFormValue(product);
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
+  };
+
+  const handleUpdateProduct = async (formValue) => {
+    const formData = new FormData();
+    formData.append('name', formValue.name);
+    formData.append('desc', formValue.desc);
+    formData.append('productType', formValue.productType);
+    formValue.markers.forEach((marker) => {
+      formData.append('markers[]', marker);
+    });
+    const prices = ['S', 'M', 'L'].map((key) => ({
+      size: formValue['size' + key],
+      price: +formValue['priceForSize' + key],
+    }));
+    formData.append('prices', JSON.stringify(prices));
+    formData.append('oldImages', JSON.stringify(images));
+    productImages.forEach((file) => {
+      formData.append('images', file.originFileObj);
+    });
+
+    try {
+      dispatch(storeActions.showLoading());
+      await ProductsService.updateProduct(productId, formData);
+      AlertService.success('Cập nhật sản phẩm thành công');
+      setProductImages([]);
+      getProductById();
+    } catch (error) {
+      AlertService.error(error?.response?.data?.message || error.message);
+    } finally {
+      dispatch(storeActions.hideLoading());
+    }
+  };
+
+  const handleRemoveFile = (file) => {
+    setImages(images.filter((item) => item.uid !== file.uid));
+  };
 
   const handleUploadFile = (info) => {
     const { fileList } = info;
@@ -55,75 +175,19 @@ const CreateProduct = () => {
     setProductImages(newFileList);
   };
 
-  const handleRemoveFile = (file) => {
-    setProductImages(productImages.filter((item) => item.uid !== file.uid));
-  };
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
-    defaultValues: DEFAULT_FORM_VALUES,
-  });
-
-  const handleCreateProduct = async (formValue) => {
-    const formData = new FormData();
-    formData.append('name', formValue.name);
-    formData.append('desc', formValue.desc);
-    formData.append('productType', formValue.productType);
-    formValue.markers.forEach((marker) => {
-      formData.append('markers[]', marker);
-    });
-    const prices = ['S', 'M', 'L'].map((key) => ({
-      size: formValue['size' + key],
-      price: +formValue['priceForSize' + key],
-    }));
-    formData.append('prices', JSON.stringify(prices));
-    productImages.forEach((file) => {
-      formData.append('images', file.originFileObj);
-    });
-
-    try {
-      dispatch(storeActions.showLoading());
-      const product = await ProductsService.createProduct(formData);
-      AlertService.success(`Thêm sản mới thành công. Id sản phẩm mới: ${product._id}`);
-      setProductImages([]);
-      reset(DEFAULT_FORM_VALUES);
-    } catch (error) {
-      AlertService.error(error?.response?.data?.message || error.message);
-    } finally {
-      dispatch(storeActions.hideLoading());
-    }
+  const handleRemoveExistedImages = (removedUrl) => {
+    setImages(images.filter((itemUrl) => itemUrl !== removedUrl));
   };
 
   useEffect(() => {
-    const getProductTypesAndMarkers = async () => {
-      try {
-        dispatch(storeActions.showLoading());
-        const [markers, productTypes] = await Promise.all([
-          MarkersService.getAllMarkers(),
-          ProductTypesService.getAllProductTypes(),
-        ]);
-        setMarkers(markers.map((marker) => ({ value: marker._id, label: marker.name })));
-        setProductTypes(
-          productTypes.map((productType) => ({ value: productType._id, label: productType.name })),
-        );
-      } catch (error) {
-        AlertService.error(error?.response?.data.message || error.message);
-      } finally {
-        dispatch(storeActions.hideLoading());
-      }
-    };
-
+    getProductById();
     getProductTypesAndMarkers();
   }, []);
 
   return (
     <>
       <div className='container'>
-        <Form layout='vertical' autoComplete='false' onFinish={handleSubmit(handleCreateProduct)}>
+        <Form layout='vertical' autoComplete='false' onFinish={handleSubmit(handleUpdateProduct)}>
           <FormInput
             label='Tên sản phẩm'
             name='name'
@@ -217,15 +281,22 @@ const CreateProduct = () => {
           </div>
           <div className='form-group'>
             <label htmlFor='upload'>Hình ảnh sản phẩm (tối đa 5 hình)</label>
+            {images.map((url) => (
+              <div
+                className='d-flex align-items-center justify-content-between my-2 p-1 pr-3 border rounded'
+                key={url}>
+                <Image src={url} style={{ width: 120, height: 120, objectFit: 'contain' }} />
+                <Button icon={<DeleteOutlined />} onClick={() => handleRemoveExistedImages(url)} />
+              </div>
+            ))}
+
             <div className='pt-2'>
               <Upload
                 multiple
                 id='upload'
-                maxCount={5}
                 listType='picture'
                 fileList={productImages}
-                onChange={handleUploadFile}
-                onRemove={handleRemoveFile}
+                maxCount={5 - (product && product.images ? product.images.length : 0)}
                 beforeUpload={(file) => {
                   if (!file.type.startsWith('image/')) {
                     AlertService.error('Chi cho phép tải lên hình ảnh');
@@ -233,10 +304,11 @@ const CreateProduct = () => {
                   if (file.size > 1024 * 1024 * 10) {
                     AlertService.error('Kích thước file tối đa là 10MB');
                   }
-
                   return false;
-                }}>
-                {productImages.length < 5 && (
+                }}
+                onRemove={handleRemoveFile}
+                onChange={handleUploadFile}>
+                {productImages.length + images.length <= 5 && (
                   <Button htmlType='button' icon={<UploadOutlined />} size='large'>
                     Tải ảnh lên
                   </Button>
@@ -253,7 +325,7 @@ const CreateProduct = () => {
           />
           <div className='form-group'>
             <Button htmlType='submit' type='primary' size='large' className='w-100'>
-              Thêm sản phẩm
+              Cập nhật sản phẩm
             </Button>
           </div>
         </Form>
@@ -262,4 +334,4 @@ const CreateProduct = () => {
   );
 };
 
-export default CreateProduct;
+export default UpdateProduct;

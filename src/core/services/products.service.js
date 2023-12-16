@@ -21,4 +21,18 @@ export const ProductsService = {
     const { data } = await axiosClient.delete(`/api/products/${productId}`);
     return data.responseData;
   },
+
+  getProductById: async (productId) => {
+    const { data } = await axiosClient.get(`/api/products/${productId}`);
+    return data.responseData;
+  },
+
+  updateProduct: async (productId, payload) => {
+    const { data } = await axiosClient.patch(`/api/products/${productId}`, payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return data.responseData;
+  },
 };

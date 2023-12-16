@@ -97,6 +97,9 @@ const AdminLayout = () => {
     if (pathname.includes('chi-tiet-nguoi-dung')) {
       setSubMenuKey('/admin/quan-ly-nguoi-dung/danh-sach-nguoi-dung');
       setMainMenuKey('/admin/quan-ly-nguoi-dung');
+    } else if (pathname.includes('cap-nhat-san-pham')) {
+      setSubMenuKey('/admin/quan-ly-san-pham/danh-sach-san-pham');
+      setMainMenuKey('/admin/quan-ly-san-pham');
     } else {
       setSubMenuKey(pathname);
       setMainMenuKey(pathname.slice(0, pathname.lastIndexOf('/')));
